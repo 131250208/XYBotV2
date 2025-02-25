@@ -1,0 +1,14 @@
+services:
+  xybotv2:
+    image: henryxiaoyang/xybotv2:latest
+    container_name: XYBotV2
+    restart: on-failure:3
+    volumes:
+      - xybotv2:/app
+      - redis_data:/var/lib/redis
+
+volumes:
+  redis_data:
+    name: redis_data
+  xybotv2:
+    name: xybotv2

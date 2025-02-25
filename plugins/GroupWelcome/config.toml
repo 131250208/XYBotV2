@@ -1,0 +1,4 @@
+[GroupWelcome]
+enable = true
+welcome-message = "👆点我查看XYBot文档！"
+url = "https://henryxiaoyang.github.io/XYBotV2"
