@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<msg>
+	<appmsg appid="" sdkver="0">
+		<title>引用视频</title>
+		<type>57</type>
+		<appattach>
+			<cdnthumbaeskey />
+			<aeskey></aeskey>
+		</appattach>
+		<refermsg>
+			<type>43</type>
+			<svrid>2448806895657482717</svrid>
+			<fromusr>wxid_yaymhyamx8kq22</fromusr>
+			<chatusr />
+			<displayname>W</displayname>
+			<content>&lt;msg&gt;&lt;videomsg length="701992" playlength="3" offset="701992" rawoffset="0" fromusername="" status="0" cameratype="2" source="2"                                              aeskey="03e2724e6ddc2dfa2ba0b784710045b3" cdnvideourl="3057020100044b30490201000204e2d905f802032f565d02045f40aa3d020467bed371042437666539366135642d316662322d343739612d623933362d3633356561303564666638340204051408040201000405004c4f8d00" cdnthumburl="3057020100044b30490201000204e2d905f802032f565d02045f40aa3d020467bed371042437666539366135642d316662322d343739612d623933362d3633356561303564666638340204051408040201000405004c4f8d00" cdnthumblength="6628" cdnthumbwidth="288" cdnthumbheight="162" cdnthumbaeskey="03e2724e6ddc2dfa2ba0b784710045b3" encryver="1" fileparam="" md5 ="fdc2cc84fd6802eba10cee4bb8c95b23" newmd5 ="db162cf91962d32a5430afd8431e1250" originsourcemd5 ="3d1b14e411a6b536b3559d7f94c7b0d0"  filekey="wxid_osl6cosuread12_4190_1740559215" uploadcontinuecount="0" rawlength="0" rawmd5="" cdnrawvideourl="" cdnrawvideoaeskey="" overwritemsgcreatetime="0" overwritenewmsgid="0" videouploadtoken="" isplaceholder="0" rawuploadcontinuecount="0"  &gt;&lt;/videomsg&gt;&lt;statextstr&gt;&lt;/statextstr&gt;&lt;encodejson&gt;&lt;![CDATA[]]&gt;&lt;/encodejson&gt;&lt;/msg&gt;</content>
+			<msgsource>&lt;msgsource&gt;&lt;bizflag&gt;0&lt;/bizflag&gt;&lt;sec_msg_node&gt;&lt;uuid&gt;&lt;![CDATA[b8480a559812e709fe2ff0a3c61f622e_]]&gt;&lt;/uuid&gt;&lt;/sec_msg_node&gt;&lt;/msgsource&gt;</msgsource>
+			<createtime>1740559215</createtime>
+		</refermsg>
+	</appmsg>
+	<fromusername>wxid_yaymhyamx8kq22</fromusername>
+	<scene>0</scene>
+	<appinfo>
+		<version>1</version>
+		<appname />
+	</appinfo>
+	<commenturl />
+</msg>

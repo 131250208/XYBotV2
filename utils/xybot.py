@@ -1,6 +1,9 @@
 import tomllib
 import xml.etree.ElementTree as ET
 from typing import Dict, Any
+import hashlib
+import os
+from pathlib import Path
 
 from loguru import logger
 
@@ -29,6 +32,9 @@ class XYBot:
 
         self.msg_db = MessageDB()
 
+        # 创建临时文件夹
+        self.temp_dir = Path("temp/message_xml")
+        self.temp_dir.mkdir(parents=True, exist_ok=True)
 
     def update_profile(self, wxid: str, nickname: str, alias: str, phone: str):
         """更新机器人信息"""
@@ -39,8 +45,17 @@ class XYBot:
 
     async def process_message(self, message: Dict[str, Any]):
         """处理接收到的消息"""
-
         msg_type = message.get("MsgType")
+        content = message["Content"]["string"]
+        
+        # 计算内容的md5
+        content_md5 = hashlib.md5(content.encode()).hexdigest()
+        
+        # 保存消息内容到临时文件
+        filename = f"{content_md5}_{msg_type}.xml"
+        file_path = self.temp_dir / filename
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(content)
 
         # 预处理消息
         message["FromWxid"] = message.get("FromUserName").get("string")
@@ -330,82 +345,70 @@ class XYBot:
             text = appmsg.find("title").text
             refermsg = appmsg.find("refermsg")
 
+            # 统一处理基础信息
             quote_messsage["MsgType"] = int(refermsg.find("type").text)
+            quote_messsage["NewMsgId"] = int(refermsg.find("svrid").text)
+            quote_messsage["ToWxid"] = refermsg.find("fromusr").text
+            quote_messsage["FromWxid"] = refermsg.find("chatusr").text
+            quote_messsage["Nickname"] = refermsg.find("displayname").text
+            quote_messsage["MsgSource"] = refermsg.find("msgsource").text
+            quote_messsage["Content"] = refermsg.find("content").text
+            quote_messsage["Createtime"] = refermsg.find("createtime").text
 
             if quote_messsage["MsgType"] == 1:  # 文本消息
-                quote_messsage["NewMsgId"] = refermsg.find("svrid").text
-                quote_messsage["ToWxid"] = refermsg.find("fromusr").text
-                quote_messsage["FromWxid"] = refermsg.find("chatusr").text
-                quote_messsage["Nickname"] = refermsg.find("displayname").text
-                quote_messsage["MsgSource"] = refermsg.find("msgsource").text
-                quote_messsage["Content"] = refermsg.find("content").text
-                quote_messsage["Createtime"] = refermsg.find("createtime").text
+                # 文本消息直接使用content作为内容
+                pass
+
+            elif quote_messsage["MsgType"] == 3:  # 图片消息
+                # 解析图片信息
+                img_content = ET.fromstring(quote_messsage["Content"])
+                img_element = img_content.find('img')
+                if img_element is not None:
+                    quote_messsage["aeskey"] = img_element.get('aeskey')
+                    quote_messsage["cdnmidimgurl"] = img_element.get('cdnmidimgurl') 
+                    quote_messsage["cdnthumburl"] = img_element.get('cdnthumburl')
+                    quote_messsage["length"] = img_element.get('length')
+                    quote_messsage["md5"] = img_element.get('md5')
 
             elif quote_messsage["MsgType"] == 49:  # 引用消息
-                quote_messsage["NewMsgId"] = refermsg.find("svrid").text
-                quote_messsage["ToWxid"] = refermsg.find("fromusr").text
-                quote_messsage["FromWxid"] = refermsg.find("chatusr").text
-                quote_messsage["Nickname"] = refermsg.find("displayname").text
-                quote_messsage["MsgSource"] = refermsg.find("msgsource").text
-                quote_messsage["Createtime"] = refermsg.find("createtime").text
-
-                quote_messsage["Content"] = refermsg.find("content").text
-
                 quote_root = ET.fromstring(quote_messsage["Content"])
                 quote_appmsg = quote_root.find("appmsg")
 
-                quote_messsage["Content"] = quote_appmsg.find("title").text if isinstance(quote_appmsg.find("title"),
-                                                                                          ET.Element) else ""
-                quote_messsage["destination"] = quote_appmsg.find("des").text if isinstance(quote_appmsg.find("des"),
-                                                                                            ET.Element) else ""
-                quote_messsage["action"] = quote_appmsg.find("action").text if isinstance(quote_appmsg.find("action"),
-                                                                                          ET.Element) else ""
-                quote_messsage["XmlType"] = int(quote_appmsg.find("type").text) if isinstance(quote_appmsg.find("type"),
-                                                                                              ET.Element) else 0
-                quote_messsage["showtype"] = int(quote_appmsg.find("showtype").text) if isinstance(
-                    quote_appmsg.find("showtype"), ET.Element) else 0
-                quote_messsage["soundtype"] = int(quote_appmsg.find("soundtype").text) if isinstance(
-                    quote_appmsg.find("soundtype"), ET.Element) else 0
-                quote_messsage["url"] = quote_appmsg.find("url").text if isinstance(quote_appmsg.find("url"),
-                                                                                    ET.Element) else ""
-                quote_messsage["lowurl"] = quote_appmsg.find("lowurl").text if isinstance(quote_appmsg.find("lowurl"),
-                                                                                          ET.Element) else ""
-                quote_messsage["dataurl"] = quote_appmsg.find("dataurl").text if isinstance(
-                    quote_appmsg.find("dataurl"), ET.Element) else ""
-                quote_messsage["lowdataurl"] = quote_appmsg.find("lowdataurl").text if isinstance(
-                    quote_appmsg.find("lowdataurl"), ET.Element) else ""
-                quote_messsage["songlyric"] = quote_appmsg.find("songlyric").text if isinstance(
-                    quote_appmsg.find("songlyric"), ET.Element) else ""
-                quote_messsage["appattach"] = {}
-                quote_messsage["appattach"]["totallen"] = int(
-                    quote_appmsg.find("appattach").find("totallen").text) if isinstance(
-                    quote_appmsg.find("appattach").find("totallen"), ET.Element) else 0
-                quote_messsage["appattach"]["attachid"] = quote_appmsg.find("appattach").find(
-                    "attachid").text if isinstance(quote_appmsg.find("appattach").find("attachid"), ET.Element) else ""
-                quote_messsage["appattach"]["emoticonmd5"] = quote_appmsg.find("appattach").find(
-                    "emoticonmd5").text if isinstance(quote_appmsg.find("appattach").find("emoticonmd5"),
-                                                      ET.Element) else ""
-                quote_messsage["appattach"]["fileext"] = quote_appmsg.find("appattach").find(
-                    "fileext").text if isinstance(quote_appmsg.find("appattach").find("fileext"), ET.Element) else ""
-                quote_messsage["appattach"]["cdnthumbaeskey"] = quote_appmsg.find("appattach").find(
-                    "cdnthumbaeskey").text if isinstance(quote_appmsg.find("appattach").find("cdnthumbaeskey"),
-                                                         ET.Element) else ""
-                quote_messsage["appattach"]["aeskey"] = quote_appmsg.find("appattach").find(
-                    "aeskey").text if isinstance(quote_appmsg.find("appattach").find("aeskey"), ET.Element) else ""
-                quote_messsage["extinfo"] = quote_appmsg.find("extinfo").text if isinstance(
-                    quote_appmsg.find("extinfo"), ET.Element) else ""
-                quote_messsage["sourceusername"] = quote_appmsg.find("sourceusername").text if isinstance(
-                    quote_appmsg.find("sourceusername"), ET.Element) else ""
-                quote_messsage["sourcedisplayname"] = quote_appmsg.find("sourcedisplayname").text if isinstance(
-                    quote_appmsg.find("sourcedisplayname"), ET.Element) else ""
-                quote_messsage["thumburl"] = quote_appmsg.find("thumburl").text if isinstance(
-                    quote_appmsg.find("thumburl"), ET.Element) else ""
-                quote_messsage["md5"] = quote_appmsg.find("md5").text if isinstance(quote_appmsg.find("md5"),
-                                                                                    ET.Element) else ""
-                quote_messsage["statextstr"] = quote_appmsg.find("statextstr").text if isinstance(
-                    quote_appmsg.find("statextstr"), ET.Element) else ""
-                quote_messsage["directshare"] = int(quote_appmsg.find("directshare").text) if isinstance(
-                    quote_appmsg.find("directshare"), ET.Element) else 0
+                # 处理基本信息
+                quote_messsage["Content"] = quote_appmsg.find("title").text if isinstance(quote_appmsg.find("title"), ET.Element) else ""
+                quote_messsage["destination"] = quote_appmsg.find("des").text if isinstance(quote_appmsg.find("des"), ET.Element) else ""
+                quote_messsage["action"] = quote_appmsg.find("action").text if isinstance(quote_appmsg.find("action"), ET.Element) else ""
+                quote_messsage["XmlType"] = int(quote_appmsg.find("type").text) if isinstance(quote_appmsg.find("type"), ET.Element) else 0
+                quote_messsage["showtype"] = int(quote_appmsg.find("showtype").text) if isinstance(quote_appmsg.find("showtype"), ET.Element) else 0
+                quote_messsage["soundtype"] = int(quote_appmsg.find("soundtype").text) if isinstance(quote_appmsg.find("soundtype"), ET.Element) else 0
+                
+                # 处理URL相关
+                quote_messsage["url"] = quote_appmsg.find("url").text if isinstance(quote_appmsg.find("url"), ET.Element) else ""
+                quote_messsage["lowurl"] = quote_appmsg.find("lowurl").text if isinstance(quote_appmsg.find("lowurl"), ET.Element) else ""
+                quote_messsage["dataurl"] = quote_appmsg.find("dataurl").text if isinstance(quote_appmsg.find("dataurl"), ET.Element) else ""
+                quote_messsage["lowdataurl"] = quote_appmsg.find("lowdataurl").text if isinstance(quote_appmsg.find("lowdataurl"), ET.Element) else ""
+                quote_messsage["songlyric"] = quote_appmsg.find("songlyric").text if isinstance(quote_appmsg.find("songlyric"), ET.Element) else ""
+                
+                # 处理额外信息
+                quote_messsage["extinfo"] = quote_appmsg.find("extinfo").text if isinstance(quote_appmsg.find("extinfo"), ET.Element) else ""
+                quote_messsage["sourceusername"] = quote_appmsg.find("sourceusername").text if isinstance(quote_appmsg.find("sourceusername"), ET.Element) else ""
+                quote_messsage["sourcedisplayname"] = quote_appmsg.find("sourcedisplayname").text if isinstance(quote_appmsg.find("sourcedisplayname"), ET.Element) else ""
+                quote_messsage["thumburl"] = quote_appmsg.find("thumburl").text if isinstance(quote_appmsg.find("thumburl"), ET.Element) else ""
+                quote_messsage["md5"] = quote_appmsg.find("md5").text if isinstance(quote_appmsg.find("md5"), ET.Element) else ""
+                quote_messsage["statextstr"] = quote_appmsg.find("statextstr").text if isinstance(quote_appmsg.find("statextstr"), ET.Element) else ""
+                quote_messsage["directshare"] = int(quote_appmsg.find("directshare").text) if isinstance(quote_appmsg.find("directshare"), ET.Element) else 0
+                
+                # 处理appattach信息
+                appattach = quote_appmsg.find("appattach")
+                if appattach is not None:
+                    quote_messsage["appattach"] = {
+                        "totallen": int(appattach.find("totallen").text) if isinstance(appattach.find("totallen"), ET.Element) else 0,
+                        "attachid": appattach.find("attachid").text if isinstance(appattach.find("attachid"), ET.Element) else "",
+                        "emoticonmd5": appattach.find("emoticonmd5").text if isinstance(appattach.find("emoticonmd5"), ET.Element) else "",
+                        "fileext": appattach.find("fileext").text if isinstance(appattach.find("fileext"), ET.Element) else "",
+                        "cdnthumbaeskey": appattach.find("cdnthumbaeskey").text if isinstance(appattach.find("cdnthumbaeskey"), ET.Element) else "",
+                        "aeskey": appattach.find("aeskey").text if isinstance(appattach.find("aeskey"), ET.Element) else ""
+                    }
 
         except Exception as e:
             logger.error(f"解析引用消息失败: {e}")
@@ -415,9 +418,9 @@ class XYBot:
         message["Quote"] = quote_messsage
 
         logger.info("收到引用消息: 消息ID:{} 来自:{} 发送人:{}  内容:{} 引用:{}",
-                    message.get("Msgid", ""),
+                    message.get("MsgId", ""),
                     message["FromWxid"],
-                    message["SenderWxid"],
+                    message["SenderWxid"], 
                     message["Content"],
                     message["Quote"])
 

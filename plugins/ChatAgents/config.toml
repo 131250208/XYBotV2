@@ -1,3 +1,23 @@
 enable = true
-api_base = "http://127.0.0.1:8001"
+base_url = "http://127.0.0.1:8001/api/v1"
 chat_role = "ljs"
+auto_send_interval = 5  # 基础发送间隔（秒）
+active_interval = 180  # 活跃间隔（秒）
+
+# 触发推理模式的关键词列表
+reasoning_keywords = [
+    "深入思考",
+    "仔细想想", 
+    "推理",
+    "分析一下",
+    "详细分析",
+    "打分",
+    "点评",
+    "评价",
+    "为什么",
+    "怎么看",
+    "如何看待",
+    "帮我分析",
+    "给出理由",
+    "具体说说"
+]

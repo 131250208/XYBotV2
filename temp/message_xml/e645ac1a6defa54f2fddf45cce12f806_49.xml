@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<msg>
+	<appmsg appid="" sdkver="0">
+		<title>引用文件</title>
+		<type>57</type>
+		<appattach>
+			<cdnthumbaeskey />
+			<aeskey></aeskey>
+		</appattach>
+		<refermsg>
+			<type>49</type>
+			<svrid>7533109939044461158</svrid>
+			<fromusr>wxid_yaymhyamx8kq22</fromusr>
+			<chatusr />
+			<displayname>W</displayname>
+			<content>&lt;msg&gt;&lt;appmsg appid="wx6618f1cfc6c132f8"  sdkver="0"&gt;&lt;title&gt;夏令营-王宇轩.pptx&lt;/title&gt;&lt;type&gt;6&lt;/type&gt;&lt;action&gt;view&lt;/action&gt;&lt;appattach&gt;&lt;totallen&gt;8033488&lt;/totallen&gt;&lt;fileext&gt;pptx&lt;/fileext&gt;&lt;attachid&gt;@cdn_3057020100044b30490201000204f1cd0c6902032f8029020462f73db7020467bc1ec7042462616461393564302d373139302d343063342d393830662d6135373734636635333230300204051400050201000405004c4e6100_9df1067cc6d64df07cfa662fd604a1c3_1&lt;/attachid&gt;&lt;cdnattachurl&gt;3057020100044b30490201000204f1cd0c6902032f8029020462f73db7020467bc1ec7042462616461393564302d373139302d343063342d393830662d6135373734636635333230300204051400050201000405004c4e6100&lt;/cdnattachurl&gt;&lt;cdnthumbaeskey&gt;&lt;/cdnthumbaeskey&gt;&lt;aeskey&gt;9df1067cc6d64df07cfa662fd604a1c3&lt;/aeskey&gt;&lt;encryver&gt;0&lt;/encryver&gt;&lt;filekey&gt;wxid_osl6cosuread12_4200_1740559418&lt;/filekey&gt;&lt;overwrite_newmsgid&gt;3394500110400626076&lt;/overwrite_newmsgid&gt;&lt;fileuploadtoken&gt;v1_+smmZ+3aWNh+Gk+xZZOillBBonZ0k+EnrBNtaVecUi4dFGnrIKxngGrmpj+VJEHahx3t7L0PiGMDvi2+l+P1gTxxdMQdJc5UPmH8hMluqvmo6ZznS2AUy/2s2nTbSSl8evONvMZe1AwnnmItKYWx1OJQryIaQdyk0tY6RtUPOZVV/WQotXfcCJdQirdvBNN8k/SGr3M2TtnsHdkQ5jPPLIEuufYmH2IMSS86TA==&lt;/fileuploadtoken&gt;&lt;uploadstatus&gt;2&lt;/uploadstatus&gt;&lt;/appattach&gt;&lt;md5&gt;d8be2af11e8919c77ecd274ce3ef2a12&lt;/md5&gt;&lt;statextstr&gt;GhQKEnd4NjYxOGYxY2ZjNmMxMzJmOA==&lt;/statextstr&gt;&lt;webviewshared&gt;&lt;jsAppId&gt;&lt;![CDATA[]]&gt;&lt;/jsAppId&gt;&lt;/webviewshared&gt;&lt;mpsharetrace&gt;&lt;hasfinderelement&gt;0&lt;/hasfinderelement&gt;&lt;/mpsharetrace&gt;&lt;secretmsg&gt;&lt;isscrectmsg&gt;0&lt;/isscrectmsg&gt;&lt;/secretmsg&gt;&lt;/appmsg&gt;&lt;appinfo&gt;&lt;version&gt;7&lt;/version&gt;&lt;appname&gt;微信电脑版&lt;/appname&gt;&lt;isforceupdate&gt;1&lt;/isforceupdate&gt;&lt;/appinfo&gt;&lt;extcommoninfo&gt;&lt;/extcommoninfo&gt;&lt;/msg&gt;</content>
+			<msgsource>&lt;msgsource&gt;&lt;svr_create_time&gt;1740559419&lt;/svr_create_time&gt;&lt;bizflag&gt;0&lt;/bizflag&gt;&lt;sec_msg_node&gt;&lt;uuid&gt;&lt;![CDATA[1fc383843110ea983301eacc97d25d31_]]&gt;&lt;/uuid&gt;&lt;/sec_msg_node&gt;&lt;tmp_node&gt;&lt;publisher-id&gt;&lt;![CDATA[msg_1901807162405967813|wxid_clf4tgvjcb1c32|wxid_yaymhyamx8kq22]]&gt;&lt;/publisher-id&gt;&lt;/tmp_node&gt;&lt;alnode&gt;&lt;fr&gt;2&lt;/fr&gt;&lt;/alnode&gt;&lt;/msgsource&gt;</msgsource>
+			<createtime>1740559419</createtime>
+		</refermsg>
+	</appmsg>
+	<fromusername>wxid_yaymhyamx8kq22</fromusername>
+	<scene>0</scene>
+	<appinfo>
+		<version>1</version>
+		<appname />
+	</appinfo>
+	<commenturl />
+</msg>
