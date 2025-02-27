@@ -230,3 +230,9 @@ WechatAPI/Client/login_stat.json
 *.rar
 *.iso
 *.img
+
+# Temporary files and directories
+tmp/
+temp/
+*.tmp
+*.temp
