@@ -1,0 +1,28 @@
+53449030922@chatroom:
+<sysmsg type="sysmsgtemplate">
+	<sysmsgtemplate>
+		<content_template type="tmpl_type_profile">
+			<plain><![CDATA[]]></plain>
+			<template><![CDATA["$username$"邀请"$names$"加入了群聊]]></template>
+			<link_list>
+				<link name="username" type="link_profile">
+					<memberlist>
+						<member>
+							<username><![CDATA[wxid_rj1i43m08we012]]></username>
+							<nickname><![CDATA[ㅤY]]></nickname>
+						</member>
+					</memberlist>
+				</link>
+				<link name="names" type="link_profile">
+					<memberlist>
+						<member>
+							<username><![CDATA[wxid_bgz3tklmo87s22]]></username>
+							<nickname><![CDATA[高校驿站-高驿]]></nickname>
+						</member>
+					</memberlist>
+					<separator><![CDATA[、]]></separator>
+				</link>
+			</link_list>
+		</content_template>
+	</sysmsgtemplate>
+</sysmsg>

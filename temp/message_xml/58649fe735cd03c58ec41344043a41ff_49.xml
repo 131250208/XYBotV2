@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<msg>
+	<appmsg appid="" sdkver="0">
+		<title>白帽子知道是谁吧</title>
+		<type>57</type>
+		<appattach>
+			<cdnthumbaeskey />
+			<aeskey></aeskey>
+		</appattach>
+		<refermsg>
+			<type>3</type>
+			<svrid>8840409013509113776</svrid>
+			<fromusr>wxid_yaymhyamx8kq22</fromusr>
+			<chatusr />
+			<displayname>W</displayname>
+			<content>&lt;msg&gt;&lt;img hdlength="0" length="182811" aeskey="3b21e7375f01e57ef7401add9c42fe28" encryver="1" md5="7c19b17f65ad91dd415d0efa104aa90f" originsourcemd5="50c0679ecec1ede631c2c4e55b35c6d0" filekey="wxid_osl6cosuread12_4370_1740633458" uploadcontinuecount="0" imgsourceurl="" hevc_mid_size="182811" cdnbigimgurl="" cdnmidimgurl="3057020100044b30490201000204e2d905f802034c50b9020461cfe672020467bff573042432303939613462652d326439322d343264342d623936632d306663313663663130396161020405150a020201000405004c50b900" cdnthumburl="3057020100044b30490201000204e2d905f802034c50b9020461cfe672020467bff573042432303939613462652d326439322d343264342d623936632d306663313663663130396161020405150a020201000405004c50b900" cdnthumblength="3694" cdnthumbwidth="120" cdnthumbheight="80" cdnthumbaeskey="3b21e7375f01e57ef7401add9c42fe28"&gt;&lt;secHashInfoBase64&gt;eyJwaGFzaCI6ImQ3OTMxMDEwMTAxMDAwMDAiLCJwZHFoYXNoIjoiNmQzNmM0MmJjNmNmMzM1NjMwMjFlOWYxNjY0YzllMTY5YjMzNjllOTBkMGQ5M2E1NzY1MjQ0NTkxZDJmNzVlNiJ9&lt;/secHashInfoBase64&gt;&lt;/img&gt;&lt;appinfo&gt;&lt;appid&gt;&lt;/appid&gt;&lt;appname&gt;&lt;/appname&gt;&lt;version&gt;0&lt;/version&gt;&lt;isforceupdate&gt;1&lt;/isforceupdate&gt;&lt;mediatagname&gt;&lt;/mediatagname&gt;&lt;messageext&gt;&lt;/messageext&gt;&lt;messageaction&gt;&lt;/messageaction&gt;&lt;/appinfo&gt;&lt;MMAsset&gt;&lt;m_assetUrlForSystem&gt;&lt;![CDATA[AF7855B2-27E2-442F-AC8B-C8365AD6A4F5/L0/001]]&gt;&lt;/m_assetUrlForSystem&gt;&lt;m_isNeedOriginImage&gt;0&lt;/m_isNeedOriginImage&gt;&lt;m_isFailedFromIcloud&gt;0&lt;/m_isFailedFromIcloud&gt;&lt;m_isLoadingFromIcloud&gt;0&lt;/m_isLoadingFromIcloud&gt;&lt;m_isUseLivePhoto&gt;0&lt;/m_isUseLivePhoto&gt;&lt;/MMAsset&gt;&lt;/msg&gt;</content>
+			<msgsource>&lt;msgsource&gt;&lt;svr_create_time&gt;1740633459&lt;/svr_create_time&gt;&lt;bizflag&gt;0&lt;/bizflag&gt;&lt;sec_msg_node&gt;&lt;uuid&gt;&lt;![CDATA[f8e976a7a2c168d9ab6b8bfacee02dd0_]]&gt;&lt;/uuid&gt;&lt;/sec_msg_node&gt;&lt;/msgsource&gt;</msgsource>
+			<createtime>1740633459</createtime>
+		</refermsg>
+	</appmsg>
+	<fromusername>wxid_yaymhyamx8kq22</fromusername>
+	<scene>0</scene>
+	<appinfo>
+		<version>1</version>
+		<appname />
+	</appinfo>
+	<commenturl />
+</msg>

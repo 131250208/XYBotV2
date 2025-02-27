@@ -51,6 +51,7 @@ class CharacterAgents(PluginBase):
         self.auto_send_interval = config.get("auto_send_interval", 7)  # 消息发送间隔(秒)
         self.active_interval = config.get("active_interval", 300)  # 活跃间隔(秒)
         self.reasoning_keywords = config.get("reasoning_keywords", [])  # 推理关键词列表
+        self.max_voice_length = config.get("max_voice_length", 28)  # 最大语音长度
 
         # 初始化API客户端
         self.api_client = APIClient(config["base_url"])
@@ -78,6 +79,47 @@ class CharacterAgents(PluginBase):
     # 消息处理器部分 #
     ###################
 
+    async def _process_message(self, bot: WechatAPIClient, message: dict, must_reason: bool = False, must_reply: bool = False):
+        """处理消息的通用函数
+        
+        Args:
+            bot (WechatAPIClient): 微信API客户端
+            message (dict): 消息字典
+        """
+        # 判断是否需要响应
+        current_time = time.time()
+        if not self.should_respond(message, current_time) and not must_reply:
+            return False
+            
+        from_wxid = message["FromWxid"]
+        sender_wxid = message["SenderWxid"]
+        msg_id = message["NewMsgId"]
+        content = message["Content"]
+        sender_nickname = await bot.get_nickname(sender_wxid)
+        
+        # 判断是否使用推理模式
+        api_method = self.api_client.reason_w_memory if must_reason or self.should_reason(content) else self.api_client.chat_w_memory
+        
+        # 准备API调用参数
+        api_params = {
+            "chat_id": from_wxid,
+            "msg_id": msg_id,
+            "msg_content": content,
+            "nick_name": sender_nickname,
+            "stream": True
+        }
+        
+        # 如果是引用消息,添加cite_msg_id参数
+        if "Quote" in message:
+            api_params["cite_msg_id"] = int(message["Quote"]["NewMsgId"])
+            
+        # 创建新任务处理流式响应
+        create_task(self._handle_stream_response(
+            bot, from_wxid, api_method(**api_params)
+        ))
+        
+        return False
+
     @on_text_message(priority=20)
     async def handle_text(self, bot: WechatAPIClient, message: dict):
         """处理文本消息"""
@@ -86,31 +128,7 @@ class CharacterAgents(PluginBase):
 
         if message["MsgType"] == 1:
             try:
-                # 判断是否需要响应
-                current_time = time.time()
-                if not self.should_respond(message, current_time):
-                    return False
-                    
-                from_wxid = message["FromWxid"]
-                sender_wxid = message["SenderWxid"]
-                msg_id = message["MsgId"]
-                content = message["Content"]
-                sender_nickname = await bot.get_nickname(sender_wxid)
-                
-                # 判断是否使用推理模式
-                api_method = self.api_client.reason if self.should_reason(content) else self.api_client.chat
-                
-                # 创建新任务处理流式响应
-                create_task(self._handle_stream_response(
-                    bot, from_wxid, api_method(
-                        chat_id=from_wxid,
-                        msg_id=msg_id,
-                        msg_content=content,
-                        nick_name=sender_nickname,
-                        stream=True
-                    )
-                ))
-                
+                return await self._process_message(bot, message)
             except Exception as e:
                 logger.error(f"处理消息时发生异常: {str(e)}")
                 logger.error(traceback.format_exc())
@@ -124,32 +142,7 @@ class CharacterAgents(PluginBase):
         if not self.enable:
             return
         try:
-            # 判断是否需要响应
-            current_time = time.time()
-            if not self.should_respond(message, current_time):
-                return False
-            
-            from_wxid = message["FromWxid"]
-            sender_wxid = message["SenderWxid"]
-            msg_id = message["NewMsgId"]
-            content = message["Content"]
-            sender_nickname = await bot.get_nickname(sender_wxid)
-            cite_msg_id = int(message["Quote"]["NewMsgId"])
-            
-            # 判断是否使用推理模式
-            api_method = self.api_client.reason if self.should_reason(content) else self.api_client.chat
-            
-            # 创建新任务处理流式响应
-            create_task(self._handle_stream_response(
-                bot, from_wxid, api_method(
-                    chat_id=from_wxid,
-                    msg_id=msg_id,
-                    msg_content=content,
-                    nick_name=sender_nickname,
-                    cite_msg_id=cite_msg_id,
-                    stream=True
-                )
-            ))
+            return await self._process_message(bot, message)
         except Exception as e:
             logger.error(f"处理消息时发生异常: {str(e)}")
             logger.error(traceback.format_exc())
@@ -161,26 +154,67 @@ class CharacterAgents(PluginBase):
         """处理@消息"""
         if not self.enable:
             return
+        try:
+            return await self._process_message(bot, message, must_reply=True)
+        except Exception as e:
+            logger.error(f"处理消息时发生异常: {str(e)}")
+            logger.error(traceback.format_exc())
+            await bot.send_text_message(message["FromWxid"], "抱歉,系统出现错误")
         return False
 
     @on_voice_message(priority=20)
     async def handle_voice(self, bot: WechatAPIClient, message: dict):
         """处理语音消息"""
-        if not self.enable or message["IsGroup"]:
+        if not self.enable:
             return
+        
+        voice_bytes = message["Content"]
+        if voice_bytes:
+            try:
+                # 添加日志以便调试
+                logger.info(f"收到语音消息，大小: {len(voice_bytes)} 字节")
+                
+                response = self.api_client.transcribe_audio(media_bytes=voice_bytes)
+                if not response:
+                    logger.error("语音转写失败，返回为空")
+                    return False
+                    
+                logger.info(f"语音转写响应: {response}")
+                
+                if "response" in response:
+                    response_data = response["response"]
+                    if response_data:
+                        # 提取转写文本
+                        if "segments" in response_data:                            
+                            # 格式化为XML
+                            xml_content = self._format_transcription_to_xml(response_data)
+                            logger.info(f"语音转写文本: \n{xml_content}")
+                            # 更新消息内容
+                            message["Content"] = f"[发了一条语音，内容如下] \n{xml_content}" 
+                            
+                            return await self._process_message(bot, message)
+                        else:
+                            logger.warning("语音转写结果不包含文本")
+                    else:
+                        logger.warning("语音转写响应数据为空")
+                else:
+                    logger.warning("语音转写响应格式不正确")
+            except Exception as e:
+                logger.error(f"处理语音消息时发生异常: {str(e)}")
+                logger.error(traceback.format_exc())
+        
         return False
 
     @on_image_message(priority=20)
     async def handle_image(self, bot: WechatAPIClient, message: dict):
         """处理图片消息"""
-        if not self.enable or message["IsGroup"]:
+        if not self.enable:
             return
         logger.info(f"[{message['FromWxid']}] 收到图片消息，已发送解析")
-        response = await self.api_client.chat_parse_images(
-            message["Content"],
-            chat_role=self.chat_role
+        response = self.api_client.parse_images(
+            message["Content"]
         )
-        img_desc = response["response"]["content"]
+        img_desc = f'[发了一张图片，详情如下] {response["response"]["content"]}'
         logger.info(f"[{message['FromWxid']}] 图片描述: {img_desc}")
         msg_id = message["NewMsgId"]
         from_wxid = message["FromWxid"]
@@ -195,7 +229,7 @@ class CharacterAgents(PluginBase):
             chat_role=self.chat_role,
             role="user"
         )
-        logger.info(f"[{message['FromWxid']}] 图片描述已更新到历史记录")
+        logger.info(f"[{message['FromWxid']}] 图片描述已更新到历史记录：\n{img_desc}")
         return False
 
     @on_video_message(priority=20)
@@ -231,6 +265,7 @@ class CharacterAgents(PluginBase):
             content_buffer = ""  # 正式回答的缓存
             reasoning_buffer = []  # 推理过程的缓存
             reasoning_finished = False  # 推理阶段标记
+            last_check_length = 0  # 上次检查的长度
 
             async for chunk in self._async_iter(reply):
                 # 处理推理内容
@@ -238,7 +273,7 @@ class CharacterAgents(PluginBase):
                     content = chunk["choices"][0]["delta"]["reasoning_content"]
                     reasoning_buffer.append(content)
                     print(content, end="", flush=True)
-                    await asyncio.sleep(0)  # 让出控制权
+                    await asyncio.sleep(0)
 
                 # 处理正式回答
                 if chunk["choices"][0]["delta"].get("content"):
@@ -251,30 +286,66 @@ class CharacterAgents(PluginBase):
                     content = chunk["choices"][0]["delta"]["content"]
                     print(content, end="", flush=True)
                     content_buffer += content
-                    await asyncio.sleep(0)  # 让出控制权
+                    
+                    # 只在内容增加时才进行检查，避免重复检查相同的内容
+                    if len(content_buffer) >= 10 and len(content_buffer) > last_check_length:
+                        last_check_length = len(content_buffer)
+                        
+                        # 查找所有可能的终止符位置
+                        punctuation_positions = []
+                        i = 0
+                        while i < len(content_buffer):
+                            # 检查连续的标点符号
+                            if content_buffer[i] in ['。', '！', '？', '.', '!', '?', '…']:
+                                # 检查是否是浮点数中的小数点
+                                if content_buffer[i] == '.':
+                                    # 向前看是否是数字
+                                    j = i - 1
+                                    while j >= 0 and content_buffer[j].isspace():
+                                        j -= 1
+                                    has_prev_digit = j >= 0 and content_buffer[j].isdigit()
+                                    
+                                    # 向后看是否是数字
+                                    j = i + 1
+                                    while j < len(content_buffer) and content_buffer[j].isspace():
+                                        j += 1
+                                    has_next_digit = j < len(content_buffer) and content_buffer[j].isdigit()
+                                    
+                                    # 如果是浮点数的一部分，跳过
+                                    if has_prev_digit and has_next_digit:
+                                        i += 1
+                                        continue
+                                
+                                start_pos = i
+                                # 向后查找连续的相同或相似标点
+                                while i + 1 < len(content_buffer) and content_buffer[i+1] in ['。', '！', '？', '.', '!', '?', '…']:
+                                    i += 1
+                                punctuation_positions.append((start_pos, i))
+                            i += 1
 
-                    # 检查是否需要发送消息
-                    if len(content_buffer) >= 10:
-                        for i, char in enumerate(content_buffer):
-                            if char in ['。', '！', '？', '.', '!', '?']:
-                                # 处理代码块(反引号包围的内容)
-                                next_backtick = content_buffer.find('`', i)
-                                if next_backtick != -1 and next_backtick > i:
-                                    pair_backtick = content_buffer.find('`', next_backtick + 1)
-                                    if pair_backtick != -1:
-                                        await self.message_queue.put((bot, from_wxid, content_buffer[:pair_backtick + 1]))
-                                        content_buffer = content_buffer[pair_backtick + 1:]
-                                        break
-                                    continue
+                        # 如果找到终止符
+                        if punctuation_positions:
+                            last_pos = punctuation_positions[-1][1]
+                            
+                            # 处理代码块
+                            next_backtick = content_buffer.find('`', 0, last_pos)
+                            if next_backtick != -1:
+                                pair_backtick = content_buffer.find('`', next_backtick + 1)
+                                if pair_backtick != -1 and pair_backtick > last_pos:
+                                    continue  # 等待代码块结束
 
-                                # 发送普通文本
-                                await self.message_queue.put((bot, from_wxid, content_buffer[:i + 1]))
-                                content_buffer = content_buffer[i + 1:]
-                                break
+                            # 发送消息并更新缓存
+                            to_send = content_buffer[:last_pos + 1].strip()
+                            if to_send:  # 确保不发送空消息
+                                await self.message_queue.put((bot, from_wxid, to_send))
+                                content_buffer = content_buffer[last_pos + 1:]
+                                last_check_length = 0  # 重置检查长度
+                    
+                    await asyncio.sleep(0)
 
             # 发送剩余内容
-            if content_buffer:
-                await self.message_queue.put((bot, from_wxid, content_buffer))
+            if content_buffer.strip():
+                await self.message_queue.put((bot, from_wxid, content_buffer.strip()))
 
         except Exception as e:
             logger.error(f"处理流式响应时发生异常: {str(e)}")
@@ -297,28 +368,46 @@ class CharacterAgents(PluginBase):
                 if msg is None:
                     continue
                 
-                # 发送消息
-                # 消息预处理
-                # re去除开头的[时间] [昵称]：
-                bot, to_wxid, content = msg
-                content = re.sub(r'^\[msg_id=\d+\] \[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] .*?：', '', content)
+                bot, from_wxid, content = msg
+                content = re.sub(f'\[msg_id.*?{self.main_name}：', '', content)
                 content = content.strip()
-                client_msgid, create_time, new_msg_id = await bot.send_text_message(to_wxid, content)
+
+                # 根据内容长度计算语音概率
+                content_length = len(content)
+                p = 1 - (content_length / self.max_voice_length)
+                voice_probability = min(max(p, 0.2), 0.6)
                 
+                if random.random() < voice_probability and content_length >= 4:
+                    content = re.sub(r'[\(\[\{（].*?[\)\]\}）]', '', content)
+                    # # 将内容转换为口语化风格
+                    # response = self.api_client.to_oral_style(content, self.chat_role)
+                    # content = response["response"]["choices"][0]["message"]["content"]
+                    # logger.info(f"口语化风格内容: {content}")
+                    if content and content != "": # 可能是括号里的，会全部删掉
+                        logger.info(f"向[{from_wxid}] 发送语音消息 (概率:{voice_probability:.2f})")
+                        voice_content = gen_voice(content)
+                        if voice_content:
+                            logger.info(f"语音消息内容type: type:{type(voice_content)}")
+                            remsg_ids = await bot.send_voice_message(from_wxid, voice_content, "mp3")
+                        else:
+                            logger.info(f"语音消息内容为空")
+                            remsg_ids = await bot.send_text_message(from_wxid, content)
+                else:
+                    logger.info(f"向[{from_wxid}] 发送文本消息")
+                    remsg_ids = await bot.send_text_message(from_wxid, content)
+
                 # 更新聊天历史
                 self.api_client.update_chat_history(
-                    chat_id=to_wxid,
-                    msg_id=new_msg_id,
+                    chat_id=from_wxid, 
+                    msg_id=remsg_ids[2],
                     msg_content=content,
                     chat_role=self.chat_role,
                     role="assistant"
                 )
                 
-                # 添加随机延迟(0.8-1.2倍基础间隔)
-                delay = self.auto_send_interval * (0.8 + random.random() * 0.4)
-                await asyncio.sleep(delay)
-                
+                await asyncio.sleep(self.auto_send_interval * (0.8 + random.random() * 0.4))
                 self.message_queue.task_done()
+                
             except Exception as e:
                 logger.error(f"消息发送异常: {str(e)}")
                 logger.error(traceback.format_exc())
@@ -381,4 +470,37 @@ class CharacterAgents(PluginBase):
             bool: 是否应该使用推理模式
         """
         content = content.lower()
-        return any(keyword in content for keyword in self.reasoning_keywords)
+        to_reason = any(keyword in content for keyword in self.reasoning_keywords)
+        logger.info(f"来自消息[{content}] 是否应该使用推理模式: {to_reason}")
+        return to_reason
+
+    def _format_transcription_to_xml(self, transcription):
+        """将转写结果格式化为XML格式
+        
+        Args:
+            transcription (dict): 转写结果字典
+            
+        Returns:
+            str: 格式化后的XML字符串
+        """
+        if not transcription or "segments" not in transcription:
+            return ""
+            
+        segments = transcription.get("segments", [])
+        if not segments:
+            return ""
+            
+        xml_parts = ["<subs>"]
+        
+        for segment in segments:
+            start = segment.get("start", 0)
+            end = segment.get("end", 0)
+            text = segment.get("text", "").strip()
+            speaker = segment.get("speaker", "")
+            
+            if text:
+                time_range = f"{start:.2f}-{end:.2f}"
+                xml_parts.append(f"<sub><t>{time_range}</t>{speaker}<txt>{text}</txt></sub>")
+        
+        xml_parts.append("</subs>")
+        return "\n".join(xml_parts)

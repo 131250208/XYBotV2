@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<msg>
+	<img aeskey="e02e06bee6a5c42f44b81bb96619d89d" encryver="1" cdnthumbaeskey="e02e06bee6a5c42f44b81bb96619d89d" cdnthumburl="3057020100044b30490201000204e2d905f802032f565d02042e40aa3d020467bffa47042464303865306363332d623163372d343935302d623364632d6637363935376366356432360204051858020201000405004c575d00" cdnthumblength="2683" cdnthumbheight="120" cdnthumbwidth="67" cdnmidheight="0" cdnmidwidth="0" cdnhdheight="0" cdnhdwidth="0" cdnmidimgurl="3057020100044b30490201000204e2d905f802032f565d02042e40aa3d020467bffa47042464303865306363332d623163372d343935302d623364632d6637363935376366356432360204051858020201000405004c575d00" length="101905" md5="645e54fd96af7bec1a3b6774d1186bf2" originsourcemd5="645e54fd96af7bec1a3b6774d1186bf2">
+		<secHashInfoBase64>eyJwaGFzaCI6ImYwMzAxMDMwMTIxMDAwNDAiLCJwZHFoYXNoIjoiOWI3MjNiNjM4ZGE3Y2EzNjdmMTI2ZDhiMGM5ZGI0ZDhlMGM5ZTI3OWQ2NzkxYmMwMDFjM2NmZWQ5NDMwYjAxNiJ9</secHashInfoBase64>
+		<live>
+			<duration>0</duration>
+			<size>0</size>
+			<md5 />
+			<fileid />
+			<hdsize>0</hdsize>
+			<hdmd5 />
+			<hdfileid />
+		</live>
+	</img>
+	<platform_signature />
+	<imgdatahash />
+	<ImgSourceInfo>
+		<ImgSourceUrl />
+		<BizType>0</BizType>
+	</ImgSourceInfo>
+</msg>

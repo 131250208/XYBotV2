@@ -1,0 +1,30 @@
+wxid_phbs1k3oz6a722:
+<?xml version="1.0"?>
+<msg>
+	<appmsg appid="wxd8a2750ce9d46980" sdkver="0">
+		<title>我发布了一篇笔记：那些质疑DeepSeek亏本卖API的，脸痛不痛</title>
+		<des>之前潞晨科技创始人尤洋教授分析部署DeepSeek月赔 4 亿的帖子爆火… 今天DeepSeek的开源第四天，DualP</des>
+		<type>5</type>
+		<url>https://www.xiaohongshu.com/discovery/item/67bfeb690000000029026b5c?app_platform=ios&amp;app_version=8.69.4&amp;share_from_user_hidden=true&amp;xsec_source=app_share&amp;type=normal&amp;xsec_token=CBOvntsdds5YzOjgOf8OmmSZcMbOWqvsBDDh5TozqGZmA=&amp;author_share=1&amp;xhsshare=WeixinSession&amp;shareRedId=N0hDOElJSkE9STs6OjgwNjY0TDk0NjZA&amp;apptime=1740631060&amp;share_id=c586de0a1bb44942a6b8231148dcf184</url>
+		<appattach>
+			<cdnthumburl>3057020100044b30490201000204563dc09802034c4dfd02040c3728b6020467bfec18042464306463636561662d326365622d343530322d613731362d3864376437613961316164330204052408030201000405004c4dfd00</cdnthumburl>
+			<cdnthumbmd5>056cbd8ab621d44f2d786ef84ecaa577</cdnthumbmd5>
+			<cdnthumblength>29688</cdnthumblength>
+			<cdnthumbwidth>360</cdnthumbwidth>
+			<cdnthumbheight>480</cdnthumbheight>
+			<cdnthumbaeskey>ccf32af09cd6fa6812a8a7adf3ace931</cdnthumbaeskey>
+			<aeskey>ccf32af09cd6fa6812a8a7adf3ace931</aeskey>
+			<encryver>0</encryver>
+			<filekey>52500421425@chatroom_142_1740631064</filekey>
+		</appattach>
+		<md5>056cbd8ab621d44f2d786ef84ecaa577</md5>
+		<statextstr>GhQKEnd4ZDhhMjc1MGNlOWQ0Njk4MA==</statextstr>
+	</appmsg>
+	<fromusername>wxid_phbs1k3oz6a722</fromusername>
+	<scene>0</scene>
+	<appinfo>
+		<version>46</version>
+		<appname>小红书</appname>
+	</appinfo>
+	<commenturl></commenturl>
+</msg>

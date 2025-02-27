@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<msg>
+	<appmsg appid="" sdkver="0">
+		<title>你看我操作^_^</title>
+		<type>57</type>
+		<appattach>
+			<cdnthumbaeskey />
+			<aeskey></aeskey>
+		</appattach>
+		<refermsg>
+			<type>3</type>
+			<svrid>8576225723312016472</svrid>
+			<fromusr>wxid_yaymhyamx8kq22</fromusr>
+			<chatusr />
+			<displayname>W</displayname>
+			<content>&lt;msg&gt;&lt;img hdlength="0" length="64965" aeskey="91b77072bca3d95300b3f010cfed3004" encryver="1" md5="c704cf29f5615b196bd94d9b45a67333" originsourcemd5="28b7e579d5c42df646c82ab64dd87cbb" filekey="wxid_osl6cosuread12_4228_1740565698" uploadcontinuecount="0" imgsourceurl="" hevc_mid_size="64965" cdnbigimgurl="" cdnmidimgurl="3057020100044b30490201000204e2d905f802032f565d02049840aa3d020467bec563042437613561633833332d636439312d346165322d623032622d386164336134396131303537020405190a020201000405004c4ff100" cdnthumburl="3057020100044b30490201000204e2d905f802032f565d02049840aa3d020467bec563042437613561633833332d636439312d346165322d623032622d386164336134396131303537020405190a020201000405004c4ff100" cdnthumblength="2910" cdnthumbwidth="55" cdnthumbheight="120" cdnthumbaeskey=""&gt;&lt;secHashInfoBase64&gt;eyJwaGFzaCI6IjEwMTAwMDEwMDAwMDEwMDAiLCJwZHFoYXNoIjoiMTcxNGU4MjM3NWM0OWVhMzU1MWNhZTMxNzE1Y2VhZWIxZjEwYzAzOWEwNzExZmM2ZjhlYmYxN2MwZWEzMTdkYyJ9&lt;/secHashInfoBase64&gt;&lt;/img&gt;&lt;appinfo&gt;&lt;appid&gt;&lt;/appid&gt;&lt;appname&gt;&lt;/appname&gt;&lt;version&gt;0&lt;/version&gt;&lt;isforceupdate&gt;1&lt;/isforceupdate&gt;&lt;mediatagname&gt;&lt;/mediatagname&gt;&lt;messageext&gt;&lt;/messageext&gt;&lt;messageaction&gt;&lt;/messageaction&gt;&lt;/appinfo&gt;&lt;MMAsset&gt;&lt;m_assetUrlForSystem&gt;&lt;![CDATA[E861649C-EC0C-4798-ADC1-104B708E8E51/L0/001]]&gt;&lt;/m_assetUrlForSystem&gt;&lt;m_isNeedOriginImage&gt;0&lt;/m_isNeedOriginImage&gt;&lt;m_isFailedFromIcloud&gt;0&lt;/m_isFailedFromIcloud&gt;&lt;m_isLoadingFromIcloud&gt;0&lt;/m_isLoadingFromIcloud&gt;&lt;m_isUseLivePhoto&gt;0&lt;/m_isUseLivePhoto&gt;&lt;/MMAsset&gt;&lt;/msg&gt;</content>
+			<msgsource>&lt;msgsource&gt;&lt;svr_create_time&gt;1740565699&lt;/svr_create_time&gt;&lt;bizflag&gt;0&lt;/bizflag&gt;&lt;sec_msg_node&gt;&lt;uuid&gt;&lt;![CDATA[5e9dac6bb8cef799be85053ae9168059_]]&gt;&lt;/uuid&gt;&lt;/sec_msg_node&gt;&lt;/msgsource&gt;</msgsource>
+			<createtime>1740565699</createtime>
+		</refermsg>
+	</appmsg>
+	<fromusername>wxid_yaymhyamx8kq22</fromusername>
+	<scene>0</scene>
+	<appinfo>
+		<version>1</version>
+		<appname />
+	</appinfo>
+	<commenturl />
+</msg>

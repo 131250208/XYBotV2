@@ -1,6 +1,7 @@
 import json
 import requests
 import aiohttp
+import base64
 from typing import Dict, Any, Union, Generator
 from loguru import logger
 
@@ -29,7 +30,7 @@ class APIClient:
         else:
             return response.json()
 
-    def chat(self, 
+    def chat_w_memory(self, 
              msg_content: str, 
              chat_role: str = "ljs",
              stream: bool = False,
@@ -48,9 +49,9 @@ class APIClient:
             "stream": stream
         }
         
-        return self._make_request("chat/chat", payload)
+        return self._make_request("chat/chat_w_memory", payload)
 
-    def reason(self, 
+    def reason_w_memory(self, 
                msg_content: str, 
                chat_role: str = "ljs",
                stream: bool = False,
@@ -69,7 +70,7 @@ class APIClient:
             "stream": stream
         }
         
-        return self._make_request("chat/reason", payload)
+        return self._make_request("chat/reason_w_memory", payload)
 
     async def parse_xhs_note(self, note_data: dict, creator_profile: dict = None, tmp_dir: str = None):
         """解析小红书笔记"""
@@ -116,43 +117,6 @@ class APIClient:
             logger.error(f"图片分析请求发生异常: {str(e)}")
             return None
 
-    async def chat_parse_images(self, image_urls: list, detail: str = "low", 
-                                max_images: int = 1, max_size_mb: int = 5,
-                                chat_role: str = None,**kwargs):
-        """聊天模式分析图片"""
-        url = f"{self.base_url}/chat/parse_img"
-        data = {
-            "image_urls": image_urls,
-            "detail": detail,
-            "max_images": max_images,
-            "max_size_mb": max_size_mb,
-            "chat_role": chat_role
-        }
-        
-        logger.info(f"准备发送图片分析请求到: {url}")
-        logger.info(f"请求数据: {data}")
-        
-        try:
-            async with aiohttp.ClientSession() as session:
-                logger.info("创建 aiohttp 会话成功")
-                async with session.post(url=url, json=data) as resp:
-                    logger.info(f"收到响应状态码: {resp.status}")
-                    if resp.status == 200:
-                        result = await resp.json()
-                        logger.info(f"成功获取响应: {result}")
-                        return result
-                    else:
-                        response_text = await resp.text()
-                        logger.error(f"聊天图片分析API请求失败,状态码: {resp.status}")
-                        logger.error(f"错误信息: {response_text}")
-                        return None
-        except aiohttp.ClientError as e:
-            logger.error(f"网络请求错误: {str(e)}")
-            return None
-        except Exception as e:
-            logger.error(f"聊天图片分析请求发生异常: {str(e)}")
-            return None
-
     async def parse_video(self, video_url: str, detail: bool = True, frame_num_per_group: int = 5):
         """分析视频"""
         url = f"{self.base_url}/vis/parse_vid"
@@ -173,51 +137,6 @@ class APIClient:
                         return None
         except Exception as e:
             logger.error(f"视频分析请求发生异常: {str(e)}")
-            return None
-
-    async def chat_parse_video(self, video_url: str, detail: bool = True, frame_num_per_group: int = 5):
-        """聊天模式分析视频"""
-        url = f"{self.base_url}/chat/parse_vid"
-        data = {
-            "video_url": video_url,
-            "detail": detail,
-            "frame_num_per_group": frame_num_per_group
-        }
-        
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.post(url=url, json=data) as resp:
-                    if resp.status == 200:
-                        return await resp.json()
-                    else:
-                        logger.error(f"聊天视频分析API请求失败,状态码: {resp.status}")
-                        logger.error(f"错误信息: {await resp.text()}")
-                        return None
-        except Exception as e:
-            logger.error(f"聊天视频分析请求发生异常: {str(e)}")
-            return None
-
-    async def transcribe_audio(self, media_path: str, language: str = "zh", parallel: bool = True, gpu_fallback: bool = True):
-        """音频转写"""
-        url = f"{self.base_url}/aud/trans"
-        data = {
-            "media_path": media_path,
-            "language": language,
-            "parallel": parallel,
-            "gpu_fallback": gpu_fallback
-        }
-        
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.post(url=url, json=data) as resp:
-                    if resp.status == 200:
-                        return await resp.json()
-                    else:
-                        logger.error(f"音频转写API请求失败,状态码: {resp.status}")
-                        logger.error(f"错误信息: {await resp.text()}")
-                        return None
-        except Exception as e:
-            logger.error(f"音频转写请求发生异常: {str(e)}")
             return None
 
     async def separate_vocal(self, media_path: str):
@@ -273,19 +192,58 @@ class APIClient:
             logger.error(f"获取角色名字请求发生异常: {str(e)}")
             return None
 
-    # def parse_image(self,
-    #                image_urls: Union[str, list],
-    #                detail: str = "low",
-    #                max_images: int = 3,
-    #                max_size_mb: int = 5,
-    #                **kwargs) -> Dict[str, Any]:
-    #     """图片解析函数"""
-    #     payload = {
-    #         "chat_role": kwargs.get("chat_role", "ljs"),
-    #         "image_urls": image_urls if isinstance(image_urls, list) else [image_urls],
-    #         "detail": detail,
-    #         "max_images": max_images,
-    #         "max_size_mb": max_size_mb
-    #     }
+    def to_oral_style(self, text: str, chat_role: str = "ljs") -> Dict[str, Any]:
+        """将文本转换为口语化风格"""
+        try:
+            payload = {
+                "text": text,
+                "chat_role": chat_role
+            }
+            
+            return self._make_request("chat/to_oral", payload)
+        except Exception as e:
+            logger.error(f"转换口语化风格请求发生异常: {str(e)}")
+            return None
+
+    def parse_images(self, 
+                    image_urls: list, 
+                    detail: str = "low", 
+                    max_images: int = 1, 
+                    max_size_mb: int = 5,
+                    **kwargs) -> Dict[str, Any]:
+        """聊天模式分析图片"""
+        payload = {
+            "image_urls": image_urls,
+            "detail": detail,
+            "max_images": max_images,
+            "max_size_mb": max_size_mb
+        }
         
-    #     return self._make_request("chat/parse_img", payload) 
+        return self._make_request("vis/parse_img", payload)
+
+    def transcribe_audio(self, 
+                        media_path: str = None, 
+                        media_bytes = None, 
+                        language: str = "zh", 
+                        parallel: bool = True, 
+                        gpu_fallback: bool = True, 
+                        model_size: str = "medium") -> Dict[str, Any]:
+        """音频转写"""
+        # 如果提供了二进制数据，进行Base64编码
+        encoded_bytes = None
+        if media_bytes:
+            if isinstance(media_bytes, bytes):
+                encoded_bytes = base64.b64encode(media_bytes).decode('utf-8')
+            else:
+                encoded_bytes = media_bytes  # 如果已经是字符串，假设已经编码
+        
+        payload = {
+            "media_path": media_path,
+            "media_base64": encoded_bytes,
+            "language": language,
+            "parallel": parallel,
+            "gpu_fallback": gpu_fallback,
+            "model_size": model_size
+        }
+        
+        return self._make_request("aud/trans", payload)
