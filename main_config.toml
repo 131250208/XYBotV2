@@ -3,8 +3,8 @@ port = 9000                # WechatAPI服务器端口，默认9000，如有冲�
 mode = "release"           # 运行模式：release(生产环境)，debug(调试模式)
 redis-host = "127.0.0.1"   # Redis服务器地址，本地使用127.0.0.1
 redis-port = 6379          # Redis端口，默认6379
-redis-password = ""        # Redis密码，如果有设置密码则填写
-redis-db = 0               # Redis数据库编号，默认0
+redis-password = "6981228"        # Redis密码，如果有设置密码则填写
+redis-db = 1               # Redis数据库编号，默认0
 
 # XYBot 核心设置
 [XYBot]
@@ -25,13 +25,15 @@ timezone = "Asia/Shanghai"             # 时区设置，中国用户使用 Asia/
 auto-restart = false                 # 仅建议在开发时启用，生产环境保持false
 
 # 消息过滤设置
-ignore-mode = "None"            # 消息处理模式：
+ignore-mode = "Whitelist"            # 消息处理模式：
 # "None" - 处理所有消息
 # "Whitelist" - 仅处理白名单消息
 # "Blacklist" - 屏蔽黑名单消息
 
 whitelist = [# 白名单列表
-    "wxid_1", # 个人用户微信ID
+    "wxid_yaymhyamx8kq22",
+    "52343524969@chatroom", 
+    "53599035429@chatroom",
     "wxid_2",
     "111@chatroom", # 群聊ID
     "222@chatroom"

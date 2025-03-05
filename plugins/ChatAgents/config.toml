@@ -1,0 +1,8 @@
+enable = true
+base_url = "http://127.0.0.1:8001/api/v1"
+uid = "ss89758"
+character_tag = "dx"
+agent_type = "creative"
+auto_send_interval = 5  # 基础发送间隔（秒）
+active_interval = 180  # 活跃间隔（秒）
+max_voice_length = 28
