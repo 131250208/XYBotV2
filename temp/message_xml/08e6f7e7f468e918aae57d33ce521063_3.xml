@@ -1,0 +1,23 @@
+wxid_qd93tjjcfcri21:
+<?xml version="1.0"?>
+<msg>
+	<img aeskey="6bfa15ccc1662f3986817935e04157ec" encryver="1" cdnthumbaeskey="6bfa15ccc1662f3986817935e04157ec" cdnthumburl="3057020100044b3049020100020442b03c3502032f54cd0204abba99db020467ca6710042463303236386230312d376335302d343438332d626632662d3337656462356534313361310204052418020201000405004c4c6d00" cdnthumblength="9551" cdnthumbheight="237" cdnthumbwidth="240" cdnmidheight="0" cdnmidwidth="0" cdnhdheight="0" cdnhdwidth="0" cdnmidimgurl="3057020100044b3049020100020442b03c3502032f54cd0204abba99db020467ca6710042463303236386230312d376335302d343438332d626632662d3337656462356534313361310204052418020201000405004c4c6d00" length="22630" md5="d0dd466872b13fab63a29f7b002a1587">
+		<secHashInfoBase64 />
+		<live>
+			<duration>0</duration>
+			<size>0</size>
+			<md5 />
+			<fileid />
+			<hdsize>0</hdsize>
+			<hdmd5 />
+			<hdfileid />
+			<stillimagetimems>0</stillimagetimems>
+		</live>
+	</img>
+	<platform_signature />
+	<imgdatahash />
+	<ImgSourceInfo>
+		<ImgSourceUrl />
+		<BizType>0</BizType>
+	</ImgSourceInfo>
+</msg>

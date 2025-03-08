@@ -1,0 +1,23 @@
+lovelangmancool:
+<?xml version="1.0"?>
+<msg>
+	<img aeskey="7ceaac0557b1de801ea55dc476485603" encryver="1" cdnthumbaeskey="7ceaac0557b1de801ea55dc476485603" cdnthumburl="3057020100044b304902010002044e569e7102032f54cd0204c1bb99db020467ca67ee042465366533373666312d333639352d346430312d613936382d3631326538303466663035640204011418020201000405004c54a100" cdnthumblength="6434" cdnthumbheight="67" cdnthumbwidth="120" cdnmidheight="0" cdnmidwidth="0" cdnhdheight="0" cdnhdwidth="0" cdnmidimgurl="3057020100044b304902010002044e569e7102032f54cd0204c1bb99db020467ca67ee042465366533373666312d333639352d346430312d613936382d3631326538303466663035640204011418020201000405004c54a100" length="64565" md5="dd4a686900d1206106799ccfa9659289">
+		<secHashInfoBase64 />
+		<live>
+			<duration>0</duration>
+			<size>0</size>
+			<md5 />
+			<fileid />
+			<hdsize>0</hdsize>
+			<hdmd5 />
+			<hdfileid />
+			<stillimagetimems>0</stillimagetimems>
+		</live>
+	</img>
+	<platform_signature />
+	<imgdatahash />
+	<ImgSourceInfo>
+		<ImgSourceUrl />
+		<BizType>0</BizType>
+	</ImgSourceInfo>
+</msg>

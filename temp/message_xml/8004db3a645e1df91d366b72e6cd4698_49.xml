@@ -1,0 +1,63 @@
+wxid_wqpoq2j104qt21:
+<?xml version="1.0"?>
+<msg>
+	<appmsg appid="" sdkver="0">
+		<title>这儿</title>
+		<des />
+		<action />
+		<type>57</type>
+		<showtype>0</showtype>
+		<soundtype>0</soundtype>
+		<mediatagname />
+		<messageext />
+		<messageaction />
+		<content />
+		<contentattr>0</contentattr>
+		<url />
+		<lowurl />
+		<dataurl />
+		<lowdataurl />
+		<songalbumurl />
+		<songlyric />
+		<appattach>
+			<totallen>0</totallen>
+			<attachid />
+			<emoticonmd5 />
+			<fileext />
+			<aeskey />
+		</appattach>
+		<extinfo />
+		<sourceusername />
+		<sourcedisplayname />
+		<thumburl />
+		<md5 />
+		<statextstr />
+		<refermsg>
+			<type>3</type>
+			<svrid>8438981118220733753</svrid>
+			<fromusr>wxid_wqpoq2j104qt21</fromusr>
+			<chatusr>wxid_wqpoq2j104qt21</chatusr>
+			<displayname>Combo</displayname>
+			<content>&lt;msg&gt;&lt;img hdlength="0" length="99929" hevc_mid_size="0"  cdnbigimgurl="" cdnmidimgurl="3057020100044b3049020100020410ffdd5e02032f54cd020409bb99db020467ca630c042461616266366166392d343935302d343762632d386563352d3164336139396233636431320204051418020201000405004c55cd00" aeskey="c9079c35e9e75f386d2fb365718e71d7" cdnthumburl="3057020100044b3049020100020410ffdd5e02032f54cd020409bb99db020467ca630c042461616266366166392d343935302d343762632d386563352d3164336139396233636431320204051418020201000405004c55cd00" cdnthumblength="8767" cdnthumbwidth="120" cdnthumbheight="90" cdnthumbaeskey="c9079c35e9e75f386d2fb365718e71d7" encryver="1" md5="2b02b1860f583ed802da91a8048a9816"/&gt;&lt;commenturl&gt;&lt;/commenturl&gt;&lt;/msg&gt;</content>
+			<msgsource>&lt;msgsource&gt;
+	&lt;alnode&gt;
+		&lt;cf&gt;2&lt;/cf&gt;
+	&lt;/alnode&gt;
+	&lt;sec_msg_node&gt;
+		&lt;uuid&gt;97c047d2f3c55dbead2037814fcd794a_&lt;/uuid&gt;
+		&lt;risk-file-flag&gt;&lt;/risk-file-flag&gt;
+		&lt;risk-file-md5-list&gt;&lt;/risk-file-md5-list&gt;
+	&lt;/sec_msg_node&gt;
+&lt;/msgsource&gt;
+</msgsource>
+			<createtime>1741316876</createtime>
+		</refermsg>
+	</appmsg>
+	<fromusername>wxid_wqpoq2j104qt21</fromusername>
+	<scene>0</scene>
+	<appinfo>
+		<version>1</version>
+		<appname></appname>
+	</appinfo>
+	<commenturl></commenturl>
+</msg>

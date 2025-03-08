@@ -1,0 +1,23 @@
+jieke6257:
+<?xml version="1.0"?>
+<msg>
+	<img aeskey="b27041e37e9be28b85a501ae37f3ce8e" encryver="1" cdnthumbaeskey="b27041e37e9be28b85a501ae37f3ce8e" cdnthumburl="3057020100044b304902010002043b3412bb02032f5919020413a90c79020467ca60ea042436363761646635382d643732332d343536352d393461302d3066616537356236303365320204052418020201000405004c4dfd00" cdnthumblength="5857" cdnthumbheight="94" cdnthumbwidth="150" cdnmidheight="0" cdnmidwidth="0" cdnhdheight="0" cdnhdwidth="0" cdnmidimgurl="3057020100044b304902010002043b3412bb02032f5919020413a90c79020467ca60ea042436363761646635382d643732332d343536352d393461302d3066616537356236303365320204052418020201000405004c4dfd00" length="24236" md5="9bf9f220924b19887efe27a5fa3e50a4" originsourcemd5="9bf9f220924b19887efe27a5fa3e50a4">
+		<secHashInfoBase64 />
+		<live>
+			<duration>0</duration>
+			<size>0</size>
+			<md5 />
+			<fileid />
+			<hdsize>0</hdsize>
+			<hdmd5 />
+			<hdfileid />
+			<stillimagetimems>0</stillimagetimems>
+		</live>
+	</img>
+	<platform_signature />
+	<imgdatahash />
+	<ImgSourceInfo>
+		<ImgSourceUrl />
+		<BizType>0</BizType>
+	</ImgSourceInfo>
+</msg>

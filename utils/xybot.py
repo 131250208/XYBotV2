@@ -49,14 +49,14 @@ class XYBot:
         msg_type = message.get("MsgType")
         content = message["Content"]["string"]
         
-        # # 计算内容的md5
-        # content_md5 = hashlib.md5(content.encode()).hexdigest()
+        # 计算内容的md5
+        content_md5 = hashlib.md5(content.encode()).hexdigest()
         
-        # # 保存消息内容到临时文件
-        # filename = f"{content_md5}_{msg_type}.xml"
-        # file_path = self.temp_dir / filename
-        # with open(file_path, "w", encoding="utf-8") as f:
-        #     f.write(content)
+        # 保存消息内容到临时文件
+        filename = f"{content_md5}_{msg_type}.xml"
+        file_path = self.temp_dir / filename
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(content)
 
         # 预处理消息
         message["FromWxid"] = message.get("FromUserName").get("string")

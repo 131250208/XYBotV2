@@ -1,0 +1,41 @@
+wxid_hrp0vl3yvdws22:
+<?xml version="1.0"?>
+<msg>
+	<appmsg appid="" sdkver="0">
+		<title>没注册过，注册了的换手机号也可以</title>
+		<type>57</type>
+		<appattach>
+			<cdnthumbaeskey />
+			<aeskey></aeskey>
+		</appattach>
+		<refermsg>
+			<type>1</type>
+			<svrid>676612706473269126</svrid>
+			<fromusr>56286193333@chatroom</fromusr>
+			<chatusr>lovelangmancool</chatusr>
+			<displayname>邪恶的丶小小强</displayname>
+			<content>新用户是指没买过的？还是没注册过的？</content>
+			<msgsource>&lt;msgsource&gt;&lt;sequence_id&gt;747174086&lt;/sequence_id&gt;
+	&lt;alnode&gt;
+		&lt;fr&gt;1&lt;/fr&gt;
+	&lt;/alnode&gt;
+	&lt;pua&gt;1&lt;/pua&gt;
+	&lt;silence&gt;1&lt;/silence&gt;
+	&lt;membercount&gt;496&lt;/membercount&gt;
+	&lt;signature&gt;V1_IyItTQEu|v1_IyItTQEu&lt;/signature&gt;
+	&lt;tmp_node&gt;
+		&lt;publisher-id&gt;&lt;/publisher-id&gt;
+	&lt;/tmp_node&gt;
+&lt;/msgsource&gt;
+</msgsource>
+			<createtime>1741316159</createtime>
+		</refermsg>
+	</appmsg>
+	<fromusername>wxid_hrp0vl3yvdws22</fromusername>
+	<scene>0</scene>
+	<appinfo>
+		<version>1</version>
+		<appname />
+	</appinfo>
+	<commenturl />
+</msg>

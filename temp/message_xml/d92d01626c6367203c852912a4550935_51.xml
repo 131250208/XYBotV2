@@ -1,0 +1,11 @@
+<msg>
+<op id='11'>
+<name>HandOffMaster</name>
+<arg>
+<handofflist opcode="1" seq="16" devicevirtualid="04b650a8f43fe8fa884f8f7270c5d64e" networkstatus="net_type:wifi" availablecount="1000" currentfloatwindowcount="0" currenthandoffcount="1"><handoff id="webpage_762933175993" createtime="1741240375993" type="2" to="" from=""><handofftype><![CDATA[1]]></handofftype><title><![CDATA[什么才是2025年的好生意？3个布局思路]]></title><url><![CDATA[https://www.xiaohongshu.com/discovery/item/6787c41e000000001b00b6cd?app_platform=ios&app_version=8.71&share_from_user_hidden=true&xsec_source=app_share&type=video&xsec_token=CBH_uK4MFwialONNSZdhaHtEWcW4JwlZknmlRFgbEvaGo=&author_share=1&xhsshare=WeixinSession&shareRedId=ODY2REVGSkA2NzUyOTgwNjY0OThKN0hO&apptime=1741213891&share_id=dcf728eac66d4eaf8b0a3925d72864bb]]></url></handoff></handofflist>
+
+
+<handofflist opcode="3" seq="16" devicevirtualid="04b650a8f43fe8fa884f8f7270c5d64e" networkstatus="net_type:wifi" availablecount="1000" currentfloatwindowcount="0" currenthandoffcount="1"><handoff id="webpage_762933175993" createtime="1741240375993" type="2" to="" from=""><handofftype><![CDATA[1]]></handofftype><title><![CDATA[小红书]]></title><url><![CDATA[https://www.xiaohongshu.com/discovery/item/6787c41e000000001b00b6cd?app_platform=ios&app_version=8.71&share_from_user_hidden=true&xsec_source=app_share&type=video&xsec_token=CBH_uK4MFwialONNSZdhaHtEWcW4JwlZknmlRFgbEvaGo=&author_share=1&xhsshare=WeixinSession&shareRedId=ODY2REVGSkA2NzUyOTgwNjY0OThKN0hO&apptime=1741213891&share_id=dcf728eac66d4eaf8b0a3925d72864bb]]></url></handoff></handofflist>
+</arg>
+</op>
+</msg>

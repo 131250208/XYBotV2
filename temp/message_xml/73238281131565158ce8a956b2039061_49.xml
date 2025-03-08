@@ -1,0 +1,76 @@
+wxid_6j4obfgvnjri22:
+<?xml version="1.0"?>
+<msg>
+	<appmsg appid="" sdkver="0">
+		<title>修复闪退，新增用户协议</title>
+		<des />
+		<action>view</action>
+		<type>57</type>
+		<showtype>0</showtype>
+		<content />
+		<url />
+		<dataurl />
+		<lowurl />
+		<lowdataurl />
+		<recorditem />
+		<thumburl />
+		<messageaction />
+		<laninfo />
+		<refermsg>
+			<type>1</type>
+			<svrid>3432232104578065643</svrid>
+			<fromusr>56286193333@chatroom</fromusr>
+			<chatusr>wxid_no94l87q8yz922</chatusr>
+			<createtime>1741275548</createtime>
+			<msgsource>&lt;msgsource&gt;
+    &lt;alnode&gt;
+        &lt;fr&gt;1&lt;/fr&gt;
+    &lt;/alnode&gt;
+    &lt;pua&gt;1&lt;/pua&gt;
+    &lt;silence&gt;1&lt;/silence&gt;
+    &lt;membercount&gt;496&lt;/membercount&gt;
+    &lt;signature&gt;V1_QH67QM6m|v1_QH67QM6m&lt;/signature&gt;
+    &lt;tmp_node&gt;
+        &lt;publisher-id /&gt;
+    &lt;/tmp_node&gt;
+    &lt;sec_msg_node&gt;
+        &lt;alnode&gt;
+            &lt;fr&gt;1&lt;/fr&gt;
+        &lt;/alnode&gt;
+    &lt;/sec_msg_node&gt;
+&lt;/msgsource&gt;
+</msgsource>
+			<content>有什么新的功能</content>
+			<displayname>沐熙</displayname>
+		</refermsg>
+		<extinfo />
+		<sourceusername />
+		<sourcedisplayname />
+		<commenturl />
+		<appattach>
+			<totallen>0</totallen>
+			<attachid />
+			<emoticonmd5 />
+			<fileext />
+			<aeskey />
+		</appattach>
+		<webviewshared>
+			<publisherId />
+			<publisherReqId>0</publisherReqId>
+		</webviewshared>
+		<weappinfo>
+			<pagepath />
+			<username />
+			<appid />
+			<appservicetype>0</appservicetype>
+		</weappinfo>
+		<websearch />
+	</appmsg>
+	<fromusername>wxid_6j4obfgvnjri22</fromusername>
+	<scene>0</scene>
+	<appinfo>
+		<version>1</version>
+		<appname></appname>
+	</appinfo>
+	<commenturl></commenturl>
+</msg>

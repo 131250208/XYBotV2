@@ -31,7 +31,8 @@ class ChatRequest:
         return {k: v for k, v in asdict(self).items() if v is not None}
 
 class APIClient:
-    def __init__(self, base_url: str):
+    def __init__(self, base_url: str, uid: str):
+        self.uid = uid
         self.base_url = base_url
         self._session: Optional[aiohttp.ClientSession] = None
         
@@ -55,6 +56,7 @@ class APIClient:
         """统一的请求处理函数"""
         try:
             url = f"{self.base_url}/{endpoint}"
+            payload["uid"] = self.uid
             response = requests.post(url, json=payload, stream=payload.get('stream', False))
             
             if response.status_code != 200:

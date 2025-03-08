@@ -20,6 +20,8 @@ from asyncio import Queue, create_task
 import time
 import xml.etree.ElementTree as ET
 import copy
+from .media.online_img_url import excel_logo_url
+
 class CharacterAgents(PluginBase):
     """角色代理插件
     
@@ -53,11 +55,12 @@ class CharacterAgents(PluginBase):
         self.auto_send_interval = config.get("auto_send_interval", 7)  # 消息发送间隔(秒)
         self.active_interval = config.get("active_interval", 300)  # 活跃间隔(秒)
         self.max_voice_length = config.get("max_voice_length", 28)  # 最大语音长度
+        self.enable_voice = config.get("enable_voice", False)  # 是否启用语音功能
         self.whitelist = config.get("whitelist", [])  # 白名单
         self.chat_rooms = [id for id in self.whitelist if "@chatroom" in id]  # 聊天室列表
         
         # 初始化API客户端
-        self.api_client = APIClient(config["base_url"])
+        self.api_client = APIClient(config["base_url"], self.uid)
         
         self.uid = config["uid"]
         self.character_tag = config["character_tag"]
@@ -112,31 +115,24 @@ class CharacterAgents(PluginBase):
             i = 0
             while i < len(content_buffer):
                 # 检查连续的标点符号
-                if content_buffer[i] in ['。', '！', '？', '.', '!', '?', '…']:
-                    # 检查是否是浮点数中的小数点
-                    if content_buffer[i] == '.':
-                        # 向前看是否是数字
-                        j = i - 1
-                        while j >= 0 and content_buffer[j].isspace():
-                            j -= 1
-                        has_prev_digit = j >= 0 and content_buffer[j].isdigit()
-                        
-                        # 向后看是否是数字
-                        j = i + 1
-                        while j < len(content_buffer) and content_buffer[j].isspace():
-                            j += 1
-                        has_next_digit = j < len(content_buffer) and content_buffer[j].isdigit()
-                        
-                        # 如果是浮点数的一部分，跳过
-                        if has_prev_digit and has_next_digit:
-                            i += 1
-                            continue
-                    
+                if content_buffer[i] in ['。', '！', '？', '!', '?', '…']:
                     start_pos = i
                     # 向后查找连续的相同或相似标点
-                    while i + 1 < len(content_buffer) and content_buffer[i+1] in ['。', '！', '？', '.', '!', '?', '…']:
+                    while i + 1 < len(content_buffer) and content_buffer[i+1] in ['。', '！', '？', '!', '?', '…']:
                         i += 1
                     punctuation_positions.append((start_pos, i))
+                elif content_buffer[i] == '.':
+                    # 特殊处理句点，只有前面紧跟两个英文单词时才切分
+                    if i >= 2:
+                        # 向前查找两个单词
+                        text_before = content_buffer[:i]
+                        words = text_before.strip().split()
+                        if len(words) >= 2 and words[-1].isalpha() and words[-2].isalpha():
+                            start_pos = i
+                            # 向后查找连续的句点
+                            while i + 1 < len(content_buffer) and content_buffer[i+1] == '.':
+                                i += 1
+                            punctuation_positions.append((start_pos, i))
                 i += 1
 
             # 如果找到终止符
@@ -242,6 +238,79 @@ class CharacterAgents(PluginBase):
                     command = content[1:]
                     if command == "help":
                         await bot.send_text_message(from_wxid, "帮助")
+                    elif command == "test_file":
+                        # 文件分享数据
+                        file_data = {
+                            "title": "副本选题 2.17-2.24.xlsx",
+                            "fileext": "xlsx",
+                            "totallen": "26672",
+                            "attachid": "@cdn_3057020100044b30490201000204e2d905f802032f559502047b42f7df020467c91f83042465376461376563342d373764622d346334302d613036632d6161343432393537316630640204051400050201000405004c53d900_31343363333937636530363035316466_1",
+                            "cdnattachurl": "3057020100044b30490201000204e2d905f802032f559502047b42f7df020467c91f83042465376461376563342d373764622d346334302d613036632d6161343432393537316630640204051400050201000405004c53d900",
+                            "aeskey": "31343363333937636530363035316466",
+                            "filekey": "wxid_m9lhdlutblw812_356_1741234050",
+                            "md5": "789223cd3c3a23cbc725255c24c1381a",
+                            "fileuploadtoken": "v1_e9+VSimc4jevzsqeYNSPRlJRjCjwBPRWfmF0/Msm1SSeS3dVhWzFdDCtVl36Oh4HkWKn18n0qfPWs0UGUR2nOAG5VcMsuZehOcYFdITNvu0AvaNht6kB6C7+SCv/lyq2kuSQK55ZkUmLGiUBXiiVbtqxv7X1XvqFG3jTtU1CmVxiyg9NBJOisBwt94Ll1VaNmgz7Kv7fnLDORRAQRU6VJolwuABLItqAI7U="
+                        }
+
+                        xml_content = f"""<appmsg appid="" sdkver="0"><title>{file_data['title']}</title><type>6</type><appattach><totallen>{file_data['totallen']}</totallen><fileext>{file_data['fileext']}</fileext><attachid>{file_data['attachid']}</attachid><cdnattachurl>{file_data['cdnattachurl']}</cdnattachurl><cdnthumbaeskey/><aeskey>{file_data['aeskey']}</aeskey><encryver>0</encryver><filekey>{file_data['filekey']}</filekey><fileuploadtoken>{file_data['fileuploadtoken']}</fileuploadtoken></appattach><md5>{file_data['md5']}</md5></appmsg><fromusername>{bot.wxid}</fromusername><scene>0</scene><appinfo><version>1</version><appname/></appinfo><commenturl/>"""
+                        await bot.send_cdn_file_msg(from_wxid, xml_content)
+                    elif command == "test_cdn":
+                        # 文件分享数据
+                        file_data = {
+                            "title": "爆款选题总结.xlsx",
+                            "fileext": "xlsx",
+                            "totallen": "9227",
+                            "attachid": "@cdn_3057020100044b30490201000204e2d905f802032f55950204e941f7df020467c94541042462343739353536612d623665322d346564382d626466652d6361646539383932643136650204051400050201000405004c4dfd00_5bfcf0a194a34ae0a37f93f5a01f05e5_1",
+                            "cdnattachurl": "3057020100044b30490201000204e2d905f802032f55950204e941f7df020467c94541042462343739353536612d623665322d346564382d626466652d6361646539383932643136650204051400050201000405004c4dfd00",
+                            "aeskey": "5bfcf0a194a34ae0a37f93f5a01f05e5",
+                            "filekey": "wxid_m9lhdlutblw812_375_1741243713",
+                            "md5": "24738268095109cd1e06a4836e9d8350",
+                            "fileuploadtoken": "v1_zZQVjrScWMbgGjAHKV6hRBHDiZ0NmFYuq26XIoHV8ScVCCHtUFdULbaQ6muFH94Lkpmd7fhSlwEvzoKRM3C/wYPaoDeUsyXCGoUo3mpr+Ffk4guRbRH2p1cUxkbX//xqDyCeRErRnFFimsk9220O9vBsIZuuEghzGeMCu9O6q4/I5Iw5wp6R+Zp6cy2WN9rxa0M4xFWUAjXJAbtxBIQGn3YGkHBnQGU="
+                        }
+
+                        xml_content = f"""<appmsg appid="" sdkver="0"><title>{file_data['title']}</title><type>6</type><appattach><totallen>{file_data['totallen']}</totallen><fileext>{file_data['fileext']}</fileext><attachid>{file_data['attachid']}</attachid><cdnattachurl>{file_data['cdnattachurl']}</cdnattachurl><cdnthumbaeskey/><aeskey>{file_data['aeskey']}</aeskey><encryver>0</encryver><filekey>{file_data['filekey']}</filekey><fileuploadtoken>{file_data['fileuploadtoken']}</fileuploadtoken></appattach><md5>{file_data['md5']}</md5></appmsg><fromusername>{bot.wxid}</fromusername><scene>0</scene><appinfo><version>1</version><appname/></appinfo><commenturl/>"""
+                        await bot.send_cdn_file_msg(from_wxid, xml_content)
+                        return False
+                    elif "test_app" in command:
+                        # 小红书分享数据
+                        data = {
+                            "title": "什么才是2025年的好生意？3个布局思路",
+                            "des": "去年我对谈了上百位赚到钱的创业者和投资人，给大家总结3个在新的一年把生意做好的方法。2025，一起赚到钱，留在牌桌上",
+                            "url": "https://www.xiaohongshu.com/discovery/item/6787c41e000000001b00b6cd?app_platform=ios&app_version=8.71&share_from_user_hidden=true&xsec_source=app_share&type=video&xsec_token=CBH_uK4MFwialONNSZdhaHtEWcW4JwlZknmlRFgbEvaGo=&author_share=1&xhsshare=WeixinSession&shareRedId=ODY2REVGSkA2NzUyOTgwNjY0OThKN0hO&apptime=1741213891&share_id=dcf728eac66d4eaf8b0a3925d72864bb",
+                            "cdnthumburl": "3057020100044b30490201000204583797ab02032f559502045541f7df020467c8d078042464623536343566632d646363302d343961642d623439382d3334356137376563353530360204051808030201000405004c505500",
+                            "cdnthumbmd5": "a53916ad552a3855da14149ca4c87351",
+                            "cdnthumbaeskey": "6421fe26e35c92f8696574fc4e4c2e7d",
+                            "filekey": "wxid_m9lhdlutblw812_362_1741236090"
+                        }
+
+                        xml_content = f"""<appmsg appid="wxd8a2750ce9d46980" sdkver="0"><title>{data['title']}</title><des>{data['des']}</des><type>4</type><url>{data['url']}</url><lowurl>{data['url']}</lowurl><appattach><cdnthumburl>{data['cdnthumburl']}</cdnthumburl><cdnthumbmd5>{data['cdnthumbmd5']}</cdnthumbmd5><cdnthumblength>31878</cdnthumblength><cdnthumbwidth>360</cdnthumbwidth><cdnthumbheight>480</cdnthumbheight><cdnthumbaeskey>{data['cdnthumbaeskey']}</cdnthumbaeskey><aeskey>{data['cdnthumbaeskey']}</aeskey><encryver>0</encryver><filekey>{data['filekey']}</filekey></appattach><md5>{data['cdnthumbmd5']}</md5><statextstr>GhQKEnd4ZDhhMjc1MGNlOWQ0Njk4MA==</statextstr></appmsg><fromusername>{bot.wxid}</fromusername><scene>0</scene><appinfo><version>46</version><appname>小红书</appname></appinfo><commenturl/>"""
+                        await bot.send_app_message(from_wxid, xml_content, 4)
+                        song_name = "海阔天空"
+
+                        async with aiohttp.ClientSession() as session:
+                            async with session.get(
+                                    f"https://www.hhlqilongzhu.cn/api/dg_wyymusic.php?gm={song_name}&n=1&br=2&type=json") as resp:
+                                data = await resp.json()
+
+                        title = data["title"]
+                        singer = data["singer"]
+                        url = data["link"]
+                        music_url = data["music_url"].split("?")[0]
+                        cover_url = data["cover"]
+                        lyric = data["lrc"]
+
+                        xml = f"""<appmsg appid="wx79f2c4418704b4f8" sdkver="0"><title>{title}</title><des>{singer}</des><action>view</action><type>3</type><showtype>0</showtype><content/><url>{url}</url><dataurl>{music_url}</dataurl><lowurl>{url}</lowurl><lowdataurl>{music_url}</lowdataurl><recorditem/><thumburl>{cover_url}</thumburl><messageaction/><laninfo/><extinfo/><sourceusername/><sourcedisplayname/><songlyric>{lyric}</songlyric><commenturl/><appattach><totallen>0</totallen><attachid/><emoticonmd5/><fileext/><aeskey/></appattach><webviewshared><publisherId/><publisherReqId>0</publisherReqId></webviewshared><weappinfo><pagepath/><username/><appid/><appservicetype>0</appservicetype></weappinfo><websearch/><songalbumurl>{cover_url}</songalbumurl></appmsg><fromusername>{bot.wxid}</fromusername><scene>0</scene><appinfo><version>1</version><appname/></appinfo><commenturl/>"""
+                        await bot.send_app_message(message["FromWxid"], xml, 3)
+                        return False
+                    elif "test_link" in command:
+                        excel_link = "https://w1-1256118424.cos.ap-shanghai.myqcloud.com/scripts/video_script.xlsx"
+                        excel_logo_url = "https://image.baidu.com/search/down?tn=download&word=download&ie=utf8&fr=detail&url=https%3A%2F%2Fbkimg.cdn.bcebos.com%2Fpic%2Ffaedab64034f78f0f736f5a2fa631d55b319ebc4b61a&thumburl=https%3A%2F%2Fimg1.baidu.com%2Fit%2Fu%3D1254359585%2C398839493%26fm%3D253%26fmt%3Dauto%26app%3D138%26f%3DJPEG%3Fw%3D648%26h%3D500"
+                        await bot.send_link_message(from_wxid, 
+                                                    excel_link, 
+                                                    "视频脚本", 
+                                                    "11KB", 
+                                                    excel_logo_url)
+                        return False
                     elif "add_white:" in command:
                         wxid = command.split(":")[1].strip()
                         if wxid:
@@ -275,6 +344,7 @@ class CharacterAgents(PluginBase):
                         return False
                     else:
                         await bot.send_text_message(from_wxid, "未知命令")
+                return False
             try:
                 return await self._process_message(bot, message)
             except Exception as e:
@@ -416,7 +486,7 @@ class CharacterAgents(PluginBase):
             if message["Link"]["AppInfo"]["AppName"] == "小红书":
                 sender_wxid = message["SenderWxid"] 
                 sender_nickname = await bot.get_nickname(sender_wxid)
-                message["Content"] = f'[分享了一个小红书链接，简要描述如下，多媒体文件正在加载中...请等一会儿] \n{message["Content"]}'
+                message["Content"] = f'[分享了一个小红书链接，标题和描述如下，而多媒体文件正在加载中...请等一会儿] \n{message["Content"]}'
                 # 更新信息到后端
                 self.api_client.append_msg2hist(
                     chat_id=message["FromWxid"],
@@ -474,6 +544,12 @@ class CharacterAgents(PluginBase):
 
                     content = chunk["choices"][0]["delta"]["content"]
                     print(content, end="", flush=True)
+                    
+                    # 如果content是字典类型，直接放入队列
+                    if isinstance(content, dict):
+                        await self.message_queue.put((bot, from_wxid, content))
+                        continue
+                        
                     content_buffer += content
                     
                     # 只在内容增加时才进行检查，避免重复检查相同的内容
@@ -485,31 +561,24 @@ class CharacterAgents(PluginBase):
                         i = 0
                         while i < len(content_buffer):
                             # 检查连续的标点符号
-                            if content_buffer[i] in ['。', '！', '？', '.', '!', '?', '…']:
-                                # 检查是否是浮点数中的小数点
-                                if content_buffer[i] == '.':
-                                    # 向前看是否是数字
-                                    j = i - 1
-                                    while j >= 0 and content_buffer[j].isspace():
-                                        j -= 1
-                                    has_prev_digit = j >= 0 and content_buffer[j].isdigit()
-                                    
-                                    # 向后看是否是数字
-                                    j = i + 1
-                                    while j < len(content_buffer) and content_buffer[j].isspace():
-                                        j += 1
-                                    has_next_digit = j < len(content_buffer) and content_buffer[j].isdigit()
-                                    
-                                    # 如果是浮点数的一部分，跳过
-                                    if has_prev_digit and has_next_digit:
-                                        i += 1
-                                        continue
-                                
+                            if content_buffer[i] in ['。', '！', '？', '!', '?', '…']:
                                 start_pos = i
                                 # 向后查找连续的相同或相似标点
-                                while i + 1 < len(content_buffer) and content_buffer[i+1] in ['。', '！', '？', '.', '!', '?', '…']:
+                                while i + 1 < len(content_buffer) and content_buffer[i+1] in ['。', '！', '？', '!', '?', '…']:
                                     i += 1
                                 punctuation_positions.append((start_pos, i))
+                            elif content_buffer[i] == '.':
+                                # 特殊处理句点，只有前面紧跟两个英文单词时才切分
+                                if i >= 2:
+                                    # 向前查找两个单词
+                                    text_before = content_buffer[:i]
+                                    words = text_before.strip().split()
+                                    if len(words) >= 2 and words[-1].isalpha() and words[-2].isalpha():
+                                        start_pos = i
+                                        # 向后查找连续的句点
+                                        while i + 1 < len(content_buffer) and content_buffer[i+1] == '.':
+                                            i += 1
+                                        punctuation_positions.append((start_pos, i))
                             i += 1
 
                         # 如果找到终止符
@@ -558,25 +627,58 @@ class CharacterAgents(PluginBase):
                     continue
                 
                 bot, from_wxid, content = msg
+                bot: WechatAPIClient = bot
+                if isinstance(content, dict):
+                    logger.info(f"消息内容为字典类型: {content}")
+                    if content.get("chunk_type") == "script_finished":
+                        title = content.get("title", "")
+                        desc = content.get("desc", "")
+                        url = content.get("url", "")
+                        file_size = content.get("excel_size", "")
+                        full_script = content.get("full_xml", "")
+                        logger.info(f"向[{from_wxid}] 发送视频脚本消息")
+                        remsg_ids = await bot.send_link_message(from_wxid, 
+                                                    url, 
+                                                    title, 
+                                                    desc[:18] + "\n" + str(file_size) + "KB",
+                                                    excel_logo_url)
+                        self.api_client.append_msg2hist(
+                            chat_id=from_wxid, 
+                            msg_id=remsg_ids[2],
+                            msg_content=f"[发了一篇视频脚本]\n{full_script}",
+                            character_tag=self.character_tag,
+                            uid=self.uid,
+                            agent_type=self.agent_type,
+                            role="assistant"
+                        )
+                    continue # 字典类型处理完毕，跳过后续处理
+
+                # 以下是处理纯文本content
                 content = re.sub(f'\[msg_id.*?{self.main_name}：', '', content)
                 content = content.strip()
 
-                # 根据内容长度计算语音概率
-                content_wo_bracket = re.sub(r'[\(\[\{（].*?[\)\]\}）]', '', content)
-                content_wo_bracket_len = len(content_wo_bracket)
-                p = 1 - (content_wo_bracket_len / self.max_voice_length)
-                voice_probability = min(max(p, 0.2), 0.6)
+                # 只有在启用语音功能时才考虑发送语音
+                if self.enable_voice:
+                    # 根据内容长度计算语音概率
+                    content_wo_bracket = re.sub(r'[\(\[\{（].*?[\)\]\}）]', '', content)
+                    content_wo_bracket_len = len(content_wo_bracket)
+                    p = 1 - (content_wo_bracket_len / self.max_voice_length)
+                    voice_probability = min(max(p, 0.2), 0.6)
 
-                if random.random() < voice_probability and content_wo_bracket_len >= 4:
-                    logger.info(f"向[{from_wxid}] 发送语音消息 (概率:{voice_probability:.2f})")
-                    voice_content = gen_voice(content_wo_bracket)
-                    if voice_content:
-                        logger.info(f"语音消息内容type: type:{type(voice_content)}")
-                        remsg_ids = await bot.send_voice_message(from_wxid, voice_content, "mp3")
+                    if random.random() < voice_probability and content_wo_bracket_len >= 4:
+                        logger.info(f"向[{from_wxid}] 发送语音消息 (概率:{voice_probability:.2f})")
+                        voice_content = gen_voice(content_wo_bracket)
+                        if voice_content:
+                            logger.info(f"语音消息内容type: type:{type(voice_content)}")
+                            remsg_ids = await bot.send_voice_message(from_wxid, voice_content, "mp3")
+                        else:
+                            logger.info(f"语音消息内容为空")
+                            remsg_ids = await bot.send_text_message(from_wxid, content)
                     else:
-                        logger.info(f"语音消息内容为空")
+                        logger.info(f"向[{from_wxid}] 发送文本消息")
                         remsg_ids = await bot.send_text_message(from_wxid, content)
                 else:
+                    # 语音功能未启用，直接发送文本消息
                     logger.info(f"向[{from_wxid}] 发送文本消息")
                     remsg_ids = await bot.send_text_message(from_wxid, content)
 

@@ -1,0 +1,23 @@
+wxid_nuj1bulf9yv222:
+<?xml version="1.0"?>
+<msg>
+	<img aeskey="e6090e2d2b6b9cb66e6587a4727fbfff" encryver="1" cdnthumbaeskey="e6090e2d2b6b9cb66e6587a4727fbfff" cdnthumburl="3057020100044b30490201000204289cf0b202032df85f0204b6372f70020467ca6764042435383337393866362d376535382d343037382d386638362d396433646464393766373231020405290a020201000405004c4d3700" cdnthumblength="4497" cdnthumbheight="144" cdnthumbwidth="65" cdnmidheight="0" cdnmidwidth="0" cdnhdheight="0" cdnhdwidth="0" cdnmidimgurl="3057020100044b30490201000204289cf0b202032df85f0204b6372f70020467ca6764042435383337393866362d376535382d343037382d386638362d396433646464393766373231020405290a020201000405004c4d3700" length="67121" md5="39174d2ba26d152e24c25fe835f53f20" hevc_mid_size="67121" originsourcemd5="c5c12512f9c8f3faf2ab87ba8c762628">
+		<secHashInfoBase64 />
+		<live>
+			<duration>0</duration>
+			<size>0</size>
+			<md5 />
+			<fileid />
+			<hdsize>0</hdsize>
+			<hdmd5 />
+			<hdfileid />
+			<stillimagetimems>0</stillimagetimems>
+		</live>
+	</img>
+	<platform_signature />
+	<imgdatahash />
+	<ImgSourceInfo>
+		<ImgSourceUrl />
+		<BizType>0</BizType>
+	</ImgSourceInfo>
+</msg>

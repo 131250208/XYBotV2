@@ -1,0 +1,464 @@
+<msg>
+    <appmsg appid="" sdkver="0">
+        <title><![CDATA[阿里深夜发布 QwQ-32B 模型：仅1/20参数就可媲美DeepSeek R1，还能在苹果笔记本运行]]></title>
+        <des><![CDATA[刚刚，阿里 Qwen 团队发布了最新的 QwQ-32B 推理模型。其参数规模为 320 亿，但在推理能力上可媲美 DeepSeek-R1——后者总参数量高达 6710 亿。
+
+阿里 Qwen 团队近日对 QwQ-32B 进行了一系列基准测试，全面评估其在数学推理、代码生成及一般问题解决能力方面的表现。测试结果显示，QwQ-32B 在多个关键指标上展现出强劲竞争力，并与当前领先的多个模型，包括 DeepSeek-R1-Distilled-Qwen-32B、DeepSeek-R1-Distilled-Llama-70B、o1-mini 以及原始 DeepSeek-R1，进行了对比分析。
+
+Hugging Face 和 ModelScope 的介绍页面显示，QwQ-32B 是一个密集模型，未采用 MoE 结构，并支持 131k 的上下文长度。
+
+有网友分析指出，由于 DeepSeek 模型规模高达 6710 亿参数，推理部署难度较大。要高效运行 DeepSeek，至少需要 22 台服务器，每台配备 8 张 GPU，这对企业来说是一个不小的成本和运维挑战。相比之下，QwQ-32B 仅有 320 亿参数，意味着它几乎可以在单机上高效运行，大大降低了推理部署的门槛。
+
+“当然，许多企业在推理部署时会将预填充（Prefill）和解码（Decoding）阶段分开运行，因为它们的推理需求不同。但无论如何，QwQ-32B 避免了超大规模模型带来的复杂管道调度和专家并行（Expert Parallelism），简化了推理部署流程。”
+
+还有网友调侃道：“关键问题是，Qwen QwQ-32B 能‘做空’英伟达（NVIDIA）吗？”
+
+据阿里 Qwen 团队介绍，这是他们探索了强化学习（RL）扩展的成果，RL 训练可持续提升模型性能，特别是在数学和代码生成方面。同时，他们观察到，持续优化 RL 训练能使中等规模模型在性能上媲美超大规模 MoE 模型。
+
+此外，QwQ-32B 还集成了智能体相关能力，能够在使用工具的同时，根据环境反馈动态调整推理过程，使推理更具批判性与适应性。这一技术进展不仅进一步验证了 RL 的变革潜力，也为通用人工智能（AGI）的发展提供了新的思路。
+
+QwQ-32B 以 Apache 2.0 许可证开源，用户可通过Qwen Chat直接进行体验。]]></des>
+        <action></action>
+        <type>5</type>
+        <showtype>1</showtype>
+        <content><![CDATA[]]></content>
+        <contentattr>0</contentattr>
+        <url><![CDATA[http://mp.weixin.qq.com/s?__biz=MzIxNDgzNDg3NQ==&mid=2247560216&idx=1&sn=fcdc298df6db7681b45e512300a2b088&chksm=9647a04b4b341c21337f83e9a4f8e93600f3ee4f5ad16d8777b96a765bf4b3c717a413e42771&scene=0&xtrack=1#rd]]></url>
+        <lowurl><![CDATA[]]></lowurl>
+        <appattach>
+            <totallen>0</totallen>
+            <attachid></attachid>
+            <fileext></fileext>
+        </appattach>
+        <extinfo></extinfo>
+        <mmreader>
+            <category type="20" count="3">
+                <name><![CDATA[深度学习与NLP]]></name>
+                <topnew>
+                    <cover><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4poIibjK1tNmrPaEUmGJAmLcP24m7SZ0ReEjYLAfvLzDlk9GaatYibkwjA/640?wxtype=jpeg&wxfrom=0]]></cover>
+                    <width>0</width>
+                    <height>0</height>
+                    <digest><![CDATA[刚刚，阿里 Qwen 团队发布了最新的 QwQ-32B 推理模型。其参数规模为 320 亿，但在推理能力上可媲美 DeepSeek-R1——后者总参数量高达 6710 亿。
+
+阿里 Qwen 团队近日对 QwQ-32B 进行了一系列基准测试，全面评估其在数学推理、代码生成及一般问题解决能力方面的表现。测试结果显示，QwQ-32B 在多个关键指标上展现出强劲竞争力，并与当前领先的多个模型，包括 DeepSeek-R1-Distilled-Qwen-32B、DeepSeek-R1-Distilled-Llama-70B、o1-mini 以及原始 DeepSeek-R1，进行了对比分析。
+
+Hugging Face 和 ModelScope 的介绍页面显示，QwQ-32B 是一个密集模型，未采用 MoE 结构，并支持 131k 的上下文长度。
+
+有网友分析指出，由于 DeepSeek 模型规模高达 6710 亿参数，推理部署难度较大。要高效运行 DeepSeek，至少需要 22 台服务器，每台配备 8 张 GPU，这对企业来说是一个不小的成本和运维挑战。相比之下，QwQ-32B 仅有 320 亿参数，意味着它几乎可以在单机上高效运行，大大降低了推理部署的门槛。
+
+“当然，许多企业在推理部署时会将预填充（Prefill）和解码（Decoding）阶段分开运行，因为它们的推理需求不同。但无论如何，QwQ-32B 避免了超大规模模型带来的复杂管道调度和专家并行（Expert Parallelism），简化了推理部署流程。”
+
+还有网友调侃道：“关键问题是，Qwen QwQ-32B 能‘做空’英伟达（NVIDIA）吗？”
+
+据阿里 Qwen 团队介绍，这是他们探索了强化学习（RL）扩展的成果，RL 训练可持续提升模型性能，特别是在数学和代码生成方面。同时，他们观察到，持续优化 RL 训练能使中等规模模型在性能上媲美超大规模 MoE 模型。
+
+此外，QwQ-32B 还集成了智能体相关能力，能够在使用工具的同时，根据环境反馈动态调整推理过程，使推理更具批判性与适应性。这一技术进展不仅进一步验证了 RL 的变革潜力，也为通用人工智能（AGI）的发展提供了新的思路。
+
+QwQ-32B 以 Apache 2.0 许可证开源，用户可通过Qwen Chat直接进行体验。]]></digest>
+                </topnew>
+                
+                <item>
+                    <has_redpacket_cover>0</has_redpacket_cover>
+                    <text_title><![CDATA[]]></text_title>
+                    <itemshowtype>8</itemshowtype>
+                    <title><![CDATA[阿里深夜发布 QwQ-32B 模型：仅1/20参数就可媲美DeepSeek R1，还能在苹果笔记本运行]]></title>
+                    <title_v2><![CDATA[阿里深夜发布 QwQ-32B 模型：仅1/20参数就可媲美DeepSeek R1，还能在苹果笔记本运行]]></title_v2>
+                    <url><![CDATA[http://mp.weixin.qq.com/s?__biz=MzIxNDgzNDg3NQ==&mid=2247560216&idx=1&sn=fcdc298df6db7681b45e512300a2b088&chksm=9697bda6becda29ac5268f66dcaca365714fe4a477f948ba0b30ddbe96bf1fc53c0d8b0fdaba&scene=0&xtrack=1#rd]]></url>
+                    <shorturl><![CDATA[]]></shorturl>
+                    <longurl><![CDATA[]]></longurl>
+                    <pub_time>1741237404</pub_time>
+                    <summary><![CDATA[]]></summary>
+                    <cover><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4poIibjK1tNmrPaEUmGJAmLcP24m7SZ0ReEjYLAfvLzDlk9GaatYibkwjA/640?wxtype=jpeg&wxfrom=0]]></cover>
+                    <tweetid></tweetid>
+                    <digest><![CDATA[]]></digest>
+                    <fileid>0</fileid>
+                    <sources>
+                        <source>
+                            <name><![CDATA[深度学习与NLP]]></name>
+                        </source>
+                    </sources>
+                    <styles></styles>
+                    <native_url></native_url>
+                    <del_flag>0</del_flag>
+                    <contentattr>0</contentattr>
+                    <play_length>0</play_length>
+                    <play_url><![CDATA[]]></play_url>
+                    <voice_id><![CDATA[]]></voice_id>
+                    <tid><![CDATA[]]></tid>
+                    <nonce_id><![CDATA[]]></nonce_id>
+                    <voice_type>0</voice_type>
+<player><![CDATA[]]></player>
+                     
+                    
+                    <music_source>0</music_source>
+                    <pic_num>6</pic_num>
+                    <vid></vid>
+                    <author><![CDATA[]]></author>
+                    <recommendation><![CDATA[]]></recommendation>
+                    <pic_urls><pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4pQqoKR9aO3Ksra5SzHfqRTEsg3rRutcbKp5Se6QicKjicbialGY30Ribgdw/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4pb3Sl5wEibnnm1jPojtyDJjNJtIjaxgDya9Bkp915ib9qV9KtQwFXX65A/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4puLSAo4X6uF2AWSKAuibjadypBsht0yzpCG9rzZicrSWbiacIz7T43w32Q/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4picUN7kc4qxV4bxwf4F41ByqUtvo9B2Vh6TialZp0TI5Q6FPC9BwJ1r7Q/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4paWHicHJ7MYsrP9qZ3LiaRQjp4CjPhIr4QVmfqBbfwkv5gRbXwRy5Mibkw/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4pO9ZU7rj5tJjo9uArNZS8IIbpPwiavr6Oy9X4zzWHHqjuu2No5ia5HoIg/0]]></pic_url>
+<pic_info_list>
+<height>609</height>
+<width>1080</width>
+</pic_info_list>
+<pic_info_list>
+<height>280</height>
+<width>1031</width>
+</pic_info_list>
+<pic_info_list>
+<height>577</height>
+<width>1080</width>
+</pic_info_list>
+<pic_info_list>
+<height>506</height>
+<width>611</width>
+</pic_info_list>
+<pic_info_list>
+<height>527</height>
+<width>606</width>
+</pic_info_list>
+<pic_info_list>
+<height>1018</height>
+<width>604</width>
+</pic_info_list>
+</pic_urls>
+                    <multi_picture_cover><cover_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4pdXf4ffuNBzZicYnfBPzR6v1Oy7PXeY25Dcvz39zjIeCIib1Y0gxspApw/0]]></cover_url>
+<cover_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4pR50KmUpIWVgXESkUPO3Anlg2VQuNzrK5CltexGYU9iaZ0cKHSdXqMBA/0]]></cover_url>
+<cover_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4p2h3hvrl2vtic1Zs5XOugWZJg2rk9R8icbibuFNHDYhIFmbNkfh9hSR18w/0]]></cover_url>
+<status>1</status>
+</multi_picture_cover>
+                    <comment_topic_id>3886360520927920128</comment_topic_id>
+                    <cover_235_1><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4poIibjK1tNmrPaEUmGJAmLcP24m7SZ0ReEjYLAfvLzDlk9GaatYibkwjA/640?wxtype=jpeg&wxfrom=0]]></cover_235_1>
+                    <cover_1_1><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4pI20zy5OusY4VfuTcDwCtq4sRs1E7bnwr3ZvDI3tvhiaJakHJsUQ5aHg/300?wxtype=jpeg&wxfrom=0]]></cover_1_1>
+                    <cover_16_9><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4poIibjK1tNmrPaEUmGJAmLcP24m7SZ0ReEjYLAfvLzDlk9GaatYibkwjA/640?wxtype=jpeg&wxfrom=0]]></cover_16_9>
+                    <appmsg_like_type>2</appmsg_like_type>
+                    <video_width>0</video_width>
+                    <video_height>0</video_height>
+                    <is_pay_subscribe>0</is_pay_subscribe>
+			<finder_feed>
+			    <object_id><![CDATA[]]></object_id>
+			    <object_nonce_id><![CDATA[]]></object_nonce_id>
+			    <feed_type>0</feed_type>
+			    <nickname><![CDATA[]]></nickname>
+			    <avatar><![CDATA[]]></avatar>
+			    <desc><![CDATA[]]></desc>
+			    <media_count>0</media_count>
+			    <media_list>
+				
+			    </media_list>
+			    <mega_video>
+				<object_id><![CDATA[]]></object_id>
+				<object_nonce_id><![CDATA[]]></object_nonce_id>
+			    </mega_video>
+			</finder_feed>
+                        <finder_live>
+                            <finder_username><![CDATA[]]></finder_username>
+                            <category><![CDATA[]]></category>
+                            <finder_nonce_id><![CDATA[]]></finder_nonce_id>
+                            <export_id><![CDATA[]]></export_id>
+                            <nickname><![CDATA[]]></nickname>
+                            <head_url><![CDATA[]]></head_url>
+                            <desc><![CDATA[]]></desc>
+                            <live_status></live_status>
+                            <live_source_type_str><![CDATA[]]></live_source_type_str>
+                            <ext_flag></ext_flag>
+                            <auth_icon_url><![CDATA[]]></auth_icon_url>
+                            <auth_icon_type_str><![CDATA[]]></auth_icon_type_str>
+                            <media>
+                                <cover_url><![CDATA[]]></cover_url>
+                                <height></height>
+                                <width></width>
+                            </media>
+                        </finder_live>
+                    <product_activity>
+                        <activity_type>0</activity_type>
+                        <activity_tag><![CDATA[]]></activity_tag>
+                        <activity_content><![CDATA[]]></activity_content>
+                    </product_activity>
+                    <has_redpacket_cover_v2>0</has_redpacket_cover_v2>
+                </item>
+                
+                <item>
+                    <has_redpacket_cover>0</has_redpacket_cover>
+                    <text_title><![CDATA[]]></text_title>
+                    <itemshowtype>8</itemshowtype>
+                    <title><![CDATA[Python接入DeepSeek，一般电脑也能很快跑，确实可以封神了！]]></title>
+                    <title_v2><![CDATA[Python接入DeepSeek，一般电脑也能很快跑，确实可以封神了！]]></title_v2>
+                    <url><![CDATA[http://mp.weixin.qq.com/s?__biz=MzIxNDgzNDg3NQ==&mid=2247560216&idx=2&sn=d1f8846ac455483ea153f96c41d30e01&chksm=963f75d7613a82b4687b9302c19dd50d967bc487eff769e7510b6335092976fe032bb7cdd8ba&scene=0&xtrack=1#rd]]></url>
+                    <shorturl><![CDATA[]]></shorturl>
+                    <longurl><![CDATA[]]></longurl>
+                    <pub_time>1741237404</pub_time>
+                    <summary><![CDATA[]]></summary>
+                    <cover><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibswewZzDldWcgpZIrJsHBIQAmYstmuB6L96xkDGSEnmEyQTsG6xWiaALSmjY7h1eibuy9Fs2zB2wfpX3g/640?wxtype=jpeg&wxfrom=0]]></cover>
+                    <tweetid></tweetid>
+                    <digest><![CDATA[]]></digest>
+                    <fileid>0</fileid>
+                    <sources>
+                        <source>
+                            <name><![CDATA[深度学习与NLP]]></name>
+                        </source>
+                    </sources>
+                    <styles></styles>
+                    <native_url></native_url>
+                    <del_flag>0</del_flag>
+                    <contentattr>0</contentattr>
+                    <play_length>0</play_length>
+                    <play_url><![CDATA[]]></play_url>
+                    <voice_id><![CDATA[]]></voice_id>
+                    <tid><![CDATA[]]></tid>
+                    <nonce_id><![CDATA[]]></nonce_id>
+                    <voice_type>0</voice_type>
+<player><![CDATA[]]></player>
+                     
+                    
+                    <music_source>0</music_source>
+                    <pic_num>8</pic_num>
+                    <vid></vid>
+                    <author><![CDATA[]]></author>
+                    <recommendation><![CDATA[]]></recommendation>
+                    <pic_urls><pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibswePBqANHw2G002ufWEqen00JdnNI7dpVVrNGmIynMmoBiarDlPGtiaDXicbAYbNHuOIaFKVLGu2WvFRQ/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibswePBqANHw2G002ufWEqen00x8G03KNGha19sBDeulh1IbDjibCcODWFDoSnyEIwOJsjJDTEf5YbUOQ/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibswePBqANHw2G002ufWEqen00r4ibzN16LHsOGiaySRhiarqFibcOTPlNc1jITDospTLiamb6rjrEThLTsgg/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibswePBqANHw2G002ufWEqen00UKceqtCpiaQiaPxLt3uicUnnEO8SVPEBnFsMmJdr2ic6cKNgL1uN1dpM6w/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibswePBqANHw2G002ufWEqen00AibdgXkyjReNT7cu0rPRh30eNpZBYm0zgsuibuibZcTseZztGCfkrBu9g/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibswePBqANHw2G002ufWEqen00icIocBZMIvTLqQdNibT5icJUYvNCs2MmpoPjMOFyJJibaNBf6leHwyDlBg/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibswePBqANHw2G002ufWEqen00srRk7mav6fvWMFMibcTBgFkl6SA1sGERgsictrAVFHSD1VUvRg8RK2rg/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibswePBqANHw2G002ufWEqen0017rDK9DgPZFQhAuUE6mBQfwI9b0axzp85MgxMHnqLfQpSuia7h7mWGQ/0]]></pic_url>
+<pic_info_list>
+<height>566</height>
+<width>1074</width>
+</pic_info_list>
+<pic_info_list>
+<height>199</height>
+<width>1080</width>
+</pic_info_list>
+<pic_info_list>
+<height>500</height>
+<width>772</width>
+</pic_info_list>
+<pic_info_list>
+<height>805</height>
+<width>1080</width>
+</pic_info_list>
+<pic_info_list>
+<height>426</height>
+<width>1080</width>
+</pic_info_list>
+<pic_info_list>
+<height>721</height>
+<width>1080</width>
+</pic_info_list>
+<pic_info_list>
+<height>366</height>
+<width>666</width>
+</pic_info_list>
+<pic_info_list>
+<height>557</height>
+<width>1080</width>
+</pic_info_list>
+</pic_urls>
+                    <multi_picture_cover><cover_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibswewZzDldWcgpZIrJsHBIQAmJgflPGibh7VbHtRZYkOiahs7ibc7HrHlJHYULQgckwq5UWLXsfwRK2MGQ/0]]></cover_url>
+<cover_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibswewZzDldWcgpZIrJsHBIQAm8wsHqBNNy4ZVxIyfa8suMPZM09F0avT0cyOH7w5wc5BGzcv0ibsVGzw/0]]></cover_url>
+<cover_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibswewZzDldWcgpZIrJsHBIQAmxD9pXH6vFAMGp6r4xuWHvqUDaQrPh7LzOSA0tUocdOVkbA4GpeCcGw/0]]></cover_url>
+<status>1</status>
+</multi_picture_cover>
+                    <comment_topic_id>3886360536346181639</comment_topic_id>
+                    <cover_235_1><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibswewZzDldWcgpZIrJsHBIQAm1HqFsFNqIKUhTbCWHDwdHuf6heTIAavyHFtE8e4b1RqdRHnnKyI9Cg/300?wxtype=jpeg&wxfrom=0]]></cover_235_1>
+                    <cover_1_1><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibswewZzDldWcgpZIrJsHBIQAm1HqFsFNqIKUhTbCWHDwdHuf6heTIAavyHFtE8e4b1RqdRHnnKyI9Cg/300?wxtype=jpeg&wxfrom=0]]></cover_1_1>
+                    <cover_16_9><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibswewZzDldWcgpZIrJsHBIQAmYstmuB6L96xkDGSEnmEyQTsG6xWiaALSmjY7h1eibuy9Fs2zB2wfpX3g/300?wxtype=jpeg&wxfrom=0]]></cover_16_9>
+                    <appmsg_like_type>2</appmsg_like_type>
+                    <video_width>0</video_width>
+                    <video_height>0</video_height>
+                    <is_pay_subscribe>0</is_pay_subscribe>
+			<finder_feed>
+			    <object_id><![CDATA[]]></object_id>
+			    <object_nonce_id><![CDATA[]]></object_nonce_id>
+			    <feed_type>0</feed_type>
+			    <nickname><![CDATA[]]></nickname>
+			    <avatar><![CDATA[]]></avatar>
+			    <desc><![CDATA[]]></desc>
+			    <media_count>0</media_count>
+			    <media_list>
+				
+			    </media_list>
+			    <mega_video>
+				<object_id><![CDATA[]]></object_id>
+				<object_nonce_id><![CDATA[]]></object_nonce_id>
+			    </mega_video>
+			</finder_feed>
+                        <finder_live>
+                            <finder_username><![CDATA[]]></finder_username>
+                            <category><![CDATA[]]></category>
+                            <finder_nonce_id><![CDATA[]]></finder_nonce_id>
+                            <export_id><![CDATA[]]></export_id>
+                            <nickname><![CDATA[]]></nickname>
+                            <head_url><![CDATA[]]></head_url>
+                            <desc><![CDATA[]]></desc>
+                            <live_status></live_status>
+                            <live_source_type_str><![CDATA[]]></live_source_type_str>
+                            <ext_flag></ext_flag>
+                            <auth_icon_url><![CDATA[]]></auth_icon_url>
+                            <auth_icon_type_str><![CDATA[]]></auth_icon_type_str>
+                            <media>
+                                <cover_url><![CDATA[]]></cover_url>
+                                <height></height>
+                                <width></width>
+                            </media>
+                        </finder_live>
+                    <product_activity>
+                        <activity_type>0</activity_type>
+                        <activity_tag><![CDATA[]]></activity_tag>
+                        <activity_content><![CDATA[]]></activity_content>
+                    </product_activity>
+                    <has_redpacket_cover_v2>0</has_redpacket_cover_v2>
+                </item>
+                
+                <item>
+                    <has_redpacket_cover>0</has_redpacket_cover>
+                    <text_title><![CDATA[]]></text_title>
+                    <itemshowtype>8</itemshowtype>
+                    <title><![CDATA[DeepSeek R1必读新书《百页大语言模型》免费pdf分享]]></title>
+                    <title_v2><![CDATA[DeepSeek R1必读新书《百页大语言模型》免费pdf分享]]></title_v2>
+                    <url><![CDATA[http://mp.weixin.qq.com/s?__biz=MzIxNDgzNDg3NQ==&mid=2247560216&idx=3&sn=2c4e8d943affda2d798c396bf4de8060&chksm=961228874efedde232952f48b92107d8c775b017e52870c2417a082f6581896ba12a329e846f&scene=0&xtrack=1#rd]]></url>
+                    <shorturl><![CDATA[]]></shorturl>
+                    <longurl><![CDATA[]]></longurl>
+                    <pub_time>1741237404</pub_time>
+                    <summary><![CDATA[]]></summary>
+                    <cover><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibswePBqANHw2G002ufWEqen00gb8QXBjpwiaF1icnqSP0fjGPp97IANiaICxibsJTJicP4cwNBub02qw6C8Q/640?wxtype=jpeg&wxfrom=0]]></cover>
+                    <tweetid></tweetid>
+                    <digest><![CDATA[]]></digest>
+                    <fileid>0</fileid>
+                    <sources>
+                        <source>
+                            <name><![CDATA[深度学习与NLP]]></name>
+                        </source>
+                    </sources>
+                    <styles></styles>
+                    <native_url></native_url>
+                    <del_flag>0</del_flag>
+                    <contentattr>0</contentattr>
+                    <play_length>0</play_length>
+                    <play_url><![CDATA[]]></play_url>
+                    <voice_id><![CDATA[]]></voice_id>
+                    <tid><![CDATA[]]></tid>
+                    <nonce_id><![CDATA[]]></nonce_id>
+                    <voice_type>0</voice_type>
+<player><![CDATA[]]></player>
+                     
+                    
+                    <music_source>0</music_source>
+                    <pic_num>6</pic_num>
+                    <vid></vid>
+                    <author><![CDATA[]]></author>
+                    <recommendation><![CDATA[]]></recommendation>
+                    <pic_urls><pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibswePBqANHw2G002ufWEqen00IGYrbWWxCQJT9JJiczPdcOEAiad9ic0c5ichxSibsNY8b0E5Qic7RgkuSSHg/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibswePBqANHw2G002ufWEqen00icLJtvMlia6UlZjhia9qjklia5fJ7ib8xj1iajK08vfIIqUXFqIjVN5B3tAQ/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibswePBqANHw2G002ufWEqen001K2Liadt4aqic3PwSeaq3J7Qv3aR2v5NXSicabYm6SDyPY3Scd3uictrKw/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibswePBqANHw2G002ufWEqen00iaBXWT4Z21E3AdRJfdIxZmz297njib3KrIa6nXCllaZ0TAdTqvtqSic2w/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibswePBqANHw2G002ufWEqen005DyqDouhYvR3QTagsuOEPeRH4TMXnIzy43J7W6ic8ibPOjnnibEAibnRicg/0]]></pic_url>
+<pic_url><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_png/1niaDLWmibswePBqANHw2G002ufWEqen00flb6EvGPCHibNaNIdbGXuLJgzVwf4qTzREf9gkazrpVWLqPBf0qoVPA/0]]></pic_url>
+<pic_info_list>
+<height>986</height>
+<width>1013</width>
+</pic_info_list>
+<pic_info_list>
+<height>1021</height>
+<width>749</width>
+</pic_info_list>
+<pic_info_list>
+<height>926</height>
+<width>678</width>
+</pic_info_list>
+<pic_info_list>
+<height>950</height>
+<width>710</width>
+</pic_info_list>
+<pic_info_list>
+<height>898</height>
+<width>698</width>
+</pic_info_list>
+<pic_info_list>
+<height>906</height>
+<width>696</width>
+</pic_info_list>
+</pic_urls>
+                    <multi_picture_cover></multi_picture_cover>
+                    <comment_topic_id>3886360529014538246</comment_topic_id>
+                    <cover_235_1><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibswePBqANHw2G002ufWEqen00gb8QXBjpwiaF1icnqSP0fjGPp97IANiaICxibsJTJicP4cwNBub02qw6C8Q/300?wxtype=jpeg&wxfrom=0]]></cover_235_1>
+                    <cover_1_1><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibswePBqANHw2G002ufWEqen00EfWiaIPPficNpkUzRGA5jY8XibqpsJ7qD986HaUmbLib1ReR97AlG7T6kg/300?wxtype=jpeg&wxfrom=0]]></cover_1_1>
+                    <cover_16_9><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibswePBqANHw2G002ufWEqen00gb8QXBjpwiaF1icnqSP0fjGPp97IANiaICxibsJTJicP4cwNBub02qw6C8Q/300?wxtype=jpeg&wxfrom=0]]></cover_16_9>
+                    <appmsg_like_type>2</appmsg_like_type>
+                    <video_width>0</video_width>
+                    <video_height>0</video_height>
+                    <is_pay_subscribe>0</is_pay_subscribe>
+			<finder_feed>
+			    <object_id><![CDATA[]]></object_id>
+			    <object_nonce_id><![CDATA[]]></object_nonce_id>
+			    <feed_type>0</feed_type>
+			    <nickname><![CDATA[]]></nickname>
+			    <avatar><![CDATA[]]></avatar>
+			    <desc><![CDATA[]]></desc>
+			    <media_count>0</media_count>
+			    <media_list>
+				
+			    </media_list>
+			    <mega_video>
+				<object_id><![CDATA[]]></object_id>
+				<object_nonce_id><![CDATA[]]></object_nonce_id>
+			    </mega_video>
+			</finder_feed>
+                        <finder_live>
+                            <finder_username><![CDATA[]]></finder_username>
+                            <category><![CDATA[]]></category>
+                            <finder_nonce_id><![CDATA[]]></finder_nonce_id>
+                            <export_id><![CDATA[]]></export_id>
+                            <nickname><![CDATA[]]></nickname>
+                            <head_url><![CDATA[]]></head_url>
+                            <desc><![CDATA[]]></desc>
+                            <live_status></live_status>
+                            <live_source_type_str><![CDATA[]]></live_source_type_str>
+                            <ext_flag></ext_flag>
+                            <auth_icon_url><![CDATA[]]></auth_icon_url>
+                            <auth_icon_type_str><![CDATA[]]></auth_icon_type_str>
+                            <media>
+                                <cover_url><![CDATA[]]></cover_url>
+                                <height></height>
+                                <width></width>
+                            </media>
+                        </finder_live>
+                    <product_activity>
+                        <activity_type>0</activity_type>
+                        <activity_tag><![CDATA[]]></activity_tag>
+                        <activity_content><![CDATA[]]></activity_content>
+                    </product_activity>
+                    <has_redpacket_cover_v2>0</has_redpacket_cover_v2>
+                </item>
+                
+            </category>
+            <publisher>
+                <username><![CDATA[gh_5808b02d6de4]]></username>
+                <nickname><![CDATA[深度学习与NLP]]></nickname>
+            </publisher>
+            <template_header></template_header>
+            <template_detail></template_detail>
+            <forbid_forward>0</forbid_forward>
+        </mmreader>
+        <thumburl><![CDATA[https://mmbiz.qpic.cn/sz_mmbiz_jpg/1niaDLWmibsweibicQr1UKoPqf2qibJHibtC4poIibjK1tNmrPaEUmGJAmLcP24m7SZ0ReEjYLAfvLzDlk9GaatYibkwjA/640?wxtype=jpeg&wxfrom=0]]></thumburl>
+    </appmsg>
+    <fromusername><![CDATA[gh_5808b02d6de4]]></fromusername>
+    <appinfo>
+        <version></version>
+        <appname><![CDATA[深度学习与NLP]]></appname>
+        <isforceupdate>1</isforceupdate>
+    </appinfo>
+    
+    
+    
+    
+    
+    
+</msg>

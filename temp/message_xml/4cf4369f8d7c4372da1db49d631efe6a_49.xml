@@ -1,0 +1,45 @@
+coolperl:
+<?xml version="1.0"?>
+<msg>
+	<appmsg appid="" sdkver="0">
+		<title>你是转发歌？</title>
+		<type>57</type>
+		<appattach>
+			<cdnthumbaeskey />
+			<aeskey></aeskey>
+		</appattach>
+		<refermsg>
+			<type>49</type>
+			<svrid>2216886258597848136</svrid>
+			<fromusr>56286193333@chatroom</fromusr>
+			<chatusr>wxid_nuj1bulf9yv222</chatusr>
+			<displayname>苏御</displayname>
+			<content>&lt;msg&gt;&lt;appmsg appid=""  sdkver="0"&gt;&lt;title&gt;我已经实现了&lt;/title&gt;&lt;type&gt;57&lt;/type&gt;&lt;action&gt;view&lt;/action&gt;&lt;appattach&gt;&lt;cdnthumbaeskey&gt;&lt;/cdnthumbaeskey&gt;&lt;aeskey&gt;&lt;/aeskey&gt;&lt;/appattach&gt;&lt;webviewshared&gt;&lt;jsAppId&gt;&lt;![CDATA[]]&gt;&lt;/jsAppId&gt;&lt;/webviewshared&gt;&lt;mpsharetrace&gt;&lt;hasfinderelement&gt;0&lt;/hasfinderelement&gt;&lt;/mpsharetrace&gt;&lt;secretmsg&gt;&lt;isscrectmsg&gt;0&lt;/isscrectmsg&gt;&lt;/secretmsg&gt;&lt;/appmsg&gt;&lt;fromusername&gt;wxid_nuj1bulf9yv222&lt;/fromusername&gt;&lt;appinfo&gt;&lt;version&gt;1&lt;/version&gt;&lt;appname&gt;&lt;/appname&gt;&lt;isforceupdate&gt;1&lt;/isforceupdate&gt;&lt;/appinfo&gt;&lt;extcommoninfo&gt;&lt;/extcommoninfo&gt;&lt;/msg&gt;</content>
+			<msgsource>&lt;msgsource&gt;&lt;sequence_id&gt;830768849&lt;/sequence_id&gt;
+	&lt;alnode&gt;
+		&lt;fr&gt;4&lt;/fr&gt;
+	&lt;/alnode&gt;
+	&lt;sec_msg_node&gt;
+		&lt;uuid&gt;0c72ccf95e002da42b6ca22d2e36f4e3_&lt;/uuid&gt;
+		&lt;risk-file-flag /&gt;
+		&lt;risk-file-md5-list /&gt;
+	&lt;/sec_msg_node&gt;
+	&lt;silence&gt;1&lt;/silence&gt;
+	&lt;membercount&gt;496&lt;/membercount&gt;
+	&lt;signature&gt;V1_eqwKrKDU|v1_rz+NUGXa&lt;/signature&gt;
+	&lt;tmp_node&gt;
+		&lt;publisher-id&gt;&lt;/publisher-id&gt;
+	&lt;/tmp_node&gt;
+&lt;/msgsource&gt;
+</msgsource>
+			<createtime>1741317627</createtime>
+		</refermsg>
+	</appmsg>
+	<fromusername>coolperl</fromusername>
+	<scene>0</scene>
+	<appinfo>
+		<version>1</version>
+		<appname />
+	</appinfo>
+	<commenturl />
+</msg>

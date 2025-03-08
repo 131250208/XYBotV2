@@ -1,0 +1,75 @@
+wxid_i53lkdtm5w5g22:
+<?xml version="1.0"?>
+<msg>
+	<appmsg appid="" sdkver="0">
+		<title>我11点的时候买的，只剩6%</title>
+		<des />
+		<action>view</action>
+		<type>57</type>
+		<showtype>0</showtype>
+		<content />
+		<url />
+		<dataurl />
+		<lowurl />
+		<lowdataurl />
+		<recorditem />
+		<thumburl />
+		<messageaction />
+		<laninfo />
+		<refermsg>
+			<type>1</type>
+			<svrid>2731941347849813348</svrid>
+			<fromusr>56286193333@chatroom</fromusr>
+			<chatusr>wxid_qd93tjjcfcri21</chatusr>
+			<createtime>1741318447</createtime>
+			<displayname>：</displayname>
+			<msgsource>&lt;msgsource&gt;
+    &lt;alnode&gt;
+        &lt;fr&gt;1&lt;/fr&gt;
+    &lt;/alnode&gt;
+    &lt;silence&gt;1&lt;/silence&gt;
+    &lt;membercount&gt;496&lt;/membercount&gt;
+    &lt;signature&gt;V1_mg1NnaD3|v1_mg1NnaD3&lt;/signature&gt;
+    &lt;tmp_node&gt;
+        &lt;publisher-id /&gt;
+    &lt;/tmp_node&gt;
+    &lt;sec_msg_node&gt;
+        &lt;alnode&gt;
+            &lt;fr&gt;1&lt;/fr&gt;
+        &lt;/alnode&gt;
+    &lt;/sec_msg_node&gt;
+&lt;/msgsource&gt;
+</msgsource>
+			<content>我这里怎么显示已售罄</content>
+		</refermsg>
+		<extinfo />
+		<sourceusername />
+		<sourcedisplayname />
+		<commenturl />
+		<appattach>
+			<totallen>0</totallen>
+			<attachid />
+			<emoticonmd5 />
+			<fileext />
+			<aeskey />
+		</appattach>
+		<webviewshared>
+			<publisherId />
+			<publisherReqId>0</publisherReqId>
+		</webviewshared>
+		<weappinfo>
+			<pagepath />
+			<username />
+			<appid />
+			<appservicetype>0</appservicetype>
+		</weappinfo>
+		<websearch />
+	</appmsg>
+	<fromusername>wxid_i53lkdtm5w5g22</fromusername>
+	<scene>0</scene>
+	<appinfo>
+		<version>1</version>
+		<appname></appname>
+	</appinfo>
+	<commenturl></commenturl>
+</msg>

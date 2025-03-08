@@ -1,0 +1,67 @@
+lovelangmancool:
+<?xml version="1.0"?>
+<msg>
+	<appmsg appid="" sdkver="0">
+		<title>不知道呢，这账号被关联注册的，单纯恶心，想注销了</title>
+		<des />
+		<action />
+		<type>57</type>
+		<showtype>0</showtype>
+		<soundtype>0</soundtype>
+		<mediatagname />
+		<messageext />
+		<messageaction />
+		<content />
+		<contentattr>0</contentattr>
+		<url />
+		<lowurl />
+		<dataurl />
+		<lowdataurl />
+		<songalbumurl />
+		<songlyric />
+		<appattach>
+			<totallen>0</totallen>
+			<attachid />
+			<emoticonmd5></emoticonmd5>
+			<fileext />
+			<aeskey></aeskey>
+		</appattach>
+		<extinfo />
+		<sourceusername />
+		<sourcedisplayname />
+		<thumburl />
+		<md5 />
+		<statextstr />
+		<refermsg>
+			<type>49</type>
+			<svrid>7827932938368080416</svrid>
+			<fromusr>56286193333@chatroom</fromusr>
+			<chatusr>wxid_qhk4z5x9p6s121</chatusr>
+			<displayname>高狒狒๑DT</displayname>
+			<content>&lt;msg&gt;&lt;appmsg appid=""  sdkver="0"&gt;&lt;title&gt;注销了再去注册，是算新还是旧？&lt;/title&gt;&lt;des&gt;&lt;/des&gt;&lt;action&gt;view&lt;/action&gt;&lt;type&gt;57&lt;/type&gt;&lt;showtype&gt;0&lt;/showtype&gt;&lt;mediatagname&gt;&lt;/mediatagname&gt;&lt;messageaction&gt;&lt;/messageaction&gt;&lt;content&gt;&lt;/content&gt;&lt;url&gt;&lt;/url&gt;&lt;lowurl&gt;&lt;/lowurl&gt;&lt;dataurl&gt;&lt;/dataurl&gt;&lt;lowdataurl&gt;&lt;/lowdataurl&gt;&lt;appattach&gt;&lt;totallen&gt;0&lt;/totallen&gt;&lt;attachid&gt;&lt;/attachid&gt;&lt;emoticonmd5&gt;&lt;/emoticonmd5&gt;&lt;fileext&gt;&lt;/fileext&gt;&lt;aeskey&gt;&lt;/aeskey&gt;&lt;/appattach&gt;&lt;extinfo&gt;&lt;/extinfo&gt;&lt;sourceusername&gt;&lt;/sourceusername&gt;&lt;sourcedisplayname&gt;&lt;/sourcedisplayname&gt;&lt;commenturl&gt;&lt;/commenturl&gt;&lt;thumburl&gt;&lt;/thumburl&gt;&lt;/appmsg&gt;&lt;fromusername&gt;wxid_qhk4z5x9p6s121&lt;/fromusername&gt;&lt;appinfo&gt;&lt;version&gt;1&lt;/version&gt;&lt;appname&gt;&lt;/appname&gt;&lt;isforceupdate&gt;1&lt;/isforceupdate&gt;&lt;/appinfo&gt;&lt;/msg&gt;</content>
+			<msgsource>&lt;msgsource&gt;
+	&lt;pua&gt;1&lt;/pua&gt;
+	&lt;sec_msg_node&gt;
+		&lt;uuid&gt;f0624bbbf9ca1f2a47f9857a07810ddf_&lt;/uuid&gt;
+		&lt;risk-file-flag /&gt;
+		&lt;risk-file-md5-list /&gt;
+	&lt;/sec_msg_node&gt;
+	&lt;silence&gt;1&lt;/silence&gt;
+	&lt;membercount&gt;496&lt;/membercount&gt;
+	&lt;signature&gt;V1_LifImGS3|v1_ziVDjTo/&lt;/signature&gt;
+	&lt;tmp_node&gt;
+		&lt;publisher-id&gt;&lt;/publisher-id&gt;
+	&lt;/tmp_node&gt;
+&lt;/msgsource&gt;
+</msgsource>
+			<createtime>1741318405</createtime>
+		</refermsg>
+	</appmsg>
+	<fromusername>lovelangmancool</fromusername>
+	<scene>0</scene>
+	<appinfo>
+		<version>1</version>
+		<appname />
+	</appinfo>
+	<commenturl />
+</msg>
