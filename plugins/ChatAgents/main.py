@@ -58,6 +58,14 @@ class CharacterAgents(PluginBase):
         self.enable_voice = config.get("enable_voice", False)  # 是否启用语音功能
         self.whitelist = config.get("whitelist", [])  # 白名单
         self.chat_rooms = [id for id in self.whitelist if "@chatroom" in id]  # 聊天室列表
+        self.stream_split_sentence = config.get("stream_split_sentence", True)  # 是否在流式输出中断句发送
+        self.special_punctuation = config.get("special_punctuation", ["<|>"])  # 特殊的断句符
+        self.only_split_on_special = config.get("only_split_on_special", False)  # 是否只在特殊断句符处断句
+        
+        # 编译正则表达式
+        special_pattern = '|'.join(map(re.escape, self.special_punctuation))
+        normal_pattern = r'[。！？!?…]+|(?<=\w\s\w)\.'
+        self.split_pattern = re.compile(f'({special_pattern}{"" if self.only_split_on_special else f"|{normal_pattern}"})')
         
         # 初始化API客户端
         self.api_client = APIClient(config["base_url"], self.uid)
@@ -94,15 +102,42 @@ class CharacterAgents(PluginBase):
     # 消息处理器部分 #
     ###################
 
-    async def _split_content_by_punctuation(self, content: str) -> list:
-        """根据标点符号切分内容
+    def _find_split_position(self, text: str, end_pos: int = None) -> tuple:
+        """查找文本中的断句位置
         
         Args:
-            content (str): 要切分的内容
+            text (str): 要检查的文本
+            end_pos (int, optional): 结束位置。默认为None，表示检查整个文本
             
         Returns:
-            list: 切分后的内容列表
+            tuple: (是否找到断句位置, 断句位置, 是否在代码块中)
         """
+        if end_pos is None:
+            end_pos = len(text)
+            
+        # 检查是否在代码块中
+        next_backtick = text.find('`', 0, end_pos)
+        if next_backtick != -1:
+            pair_backtick = text.find('`', next_backtick + 1, end_pos)
+            if pair_backtick != -1:
+                return False, -1, True
+        
+        # 查找最后一个断句符
+        match = None
+        for m in self.split_pattern.finditer(text[:end_pos]):
+            match = m
+            
+        if match:
+            return True, match.end(), False
+            
+        return False, -1, False
+
+    def _remove_special_punctuation(self, text: str) -> str:
+        """移除文本中的特殊断句符"""
+        return self.split_pattern.sub('', text).strip()
+
+    async def _split_content_by_punctuation(self, content: str) -> list:
+        """根据标点符号切分内容"""
         result = []
         content_buffer = content
         last_check_length = 0
@@ -110,52 +145,23 @@ class CharacterAgents(PluginBase):
         while len(content_buffer) >= 10 and len(content_buffer) > last_check_length:
             last_check_length = len(content_buffer)
             
-            # 查找所有可能的终止符位置
-            punctuation_positions = []
-            i = 0
-            while i < len(content_buffer):
-                # 检查连续的标点符号
-                if content_buffer[i] in ['。', '！', '？', '!', '?', '…']:
-                    start_pos = i
-                    # 向后查找连续的相同或相似标点
-                    while i + 1 < len(content_buffer) and content_buffer[i+1] in ['。', '！', '？', '!', '?', '…']:
-                        i += 1
-                    punctuation_positions.append((start_pos, i))
-                elif content_buffer[i] == '.':
-                    # 特殊处理句点，只有前面紧跟两个英文单词时才切分
-                    if i >= 2:
-                        # 向前查找两个单词
-                        text_before = content_buffer[:i]
-                        words = text_before.strip().split()
-                        if len(words) >= 2 and words[-1].isalpha() and words[-2].isalpha():
-                            start_pos = i
-                            # 向后查找连续的句点
-                            while i + 1 < len(content_buffer) and content_buffer[i+1] == '.':
-                                i += 1
-                            punctuation_positions.append((start_pos, i))
-                i += 1
-
-            # 如果找到终止符
-            if punctuation_positions:
-                last_pos = punctuation_positions[-1][1]
-                
-                # 处理代码块
-                next_backtick = content_buffer.find('`', 0, last_pos)
-                if next_backtick != -1:
-                    pair_backtick = content_buffer.find('`', next_backtick + 1)
-                    if pair_backtick != -1 and pair_backtick > last_pos:
-                        break  # 等待代码块结束
-
-                # 切分并更新缓存
-                to_send = content_buffer[:last_pos + 1].strip()
+            found, pos, in_code = self._find_split_position(content_buffer)
+            if found and not in_code:
+                to_send = content_buffer[:pos].strip()
                 if to_send:  # 确保不发送空消息
-                    result.append(to_send)
-                    content_buffer = content_buffer[last_pos + 1:]
-                    last_check_length = 0  # 重置检查长度
+                    to_send = self._remove_special_punctuation(to_send)
+                    if to_send:  # 再次确保不发送空消息
+                        result.append(to_send)
+                content_buffer = content_buffer[pos:].strip()
+                last_check_length = 0  # 重置检查长度
+            elif in_code:
+                break
 
         # 处理剩余内容
         if content_buffer.strip():
-            result.append(content_buffer.strip())
+            remaining = self._remove_special_punctuation(content_buffer)
+            if remaining:
+                result.append(remaining)
             
         return result
 
@@ -184,9 +190,9 @@ class CharacterAgents(PluginBase):
             "stream": True
         }
         
-        # 如果是引用消息,添加cite_msg_id参数
+        # 如果是引用消息,添加quote_msg_id参数
         if "Quote" in message:
-            api_params["cite_msg_id"] = int(message["Quote"]["NewMsgId"])
+            api_params["quote_msg_id"] = int(message["Quote"]["NewMsgId"])
         
         # 调用API获取响应
         reply = self.api_client.uni_chat(**api_params)
@@ -360,7 +366,51 @@ class CharacterAgents(PluginBase):
         if not self.enable:
             return
         try:
-            return await self._process_message(bot, message)
+            msg_content = message["Content"]
+            if msg_content == "下载":
+                from_wxid = message["FromWxid"]
+                result = self.api_client.download_media(chat_id=from_wxid,
+                                                      quote_msg_id=message["Quote"]["NewMsgId"],
+                                                      character_tag=self.character_tag,
+                                                      agent_type=self.agent_type)
+                logger.info(f"获得下载返回！")
+                download_type = ""
+                if isinstance(result, Generator):
+                    # 流式处理进度
+                    async for progress in self._async_iter(result):
+                        if "progress" in progress:
+                            # 发送最新的一批进度信息
+                            progress_list = progress["progress"]
+                            logger.info(f"最新进度: {' -> '.join(progress_list)}")
+                            await bot.send_text_message(from_wxid, f"最新进度: {' -> '.join(progress_list)}")
+                        else:
+                            # 最终结果
+                            assert "type" in progress
+                            download_type = progress["type"]
+                            download_info = progress
+                            logger.info(f"下载完成: {progress}")
+                            await bot.send_text_message(from_wxid, f"下载完成！")
+                            break
+                else:
+                    assert isinstance(result, dict)
+                    download_info = result["response"]
+                
+                # 发送下载结果
+                if download_type == "xhs_note_excel":
+                    title = download_info.get("title", "")
+                    desc = download_info.get("desc", "")
+                    url = download_info.get("url", "")
+                    file_size = download_info.get("excel_size", "")
+                    logger.info(f"向[{from_wxid}] 发送视频脚本消息")
+                    await bot.send_link_message(from_wxid, 
+                                              url, 
+                                              title, 
+                                              desc[:18] + "\n" + str(file_size) + "KB",
+                                              excel_logo_url)
+
+                return False
+            else:
+                return await self._process_message(bot, message)
         except Exception as e:
             logger.error(f"处理消息时发生异常: {str(e)}")
             logger.error(traceback.format_exc())
@@ -552,58 +602,27 @@ class CharacterAgents(PluginBase):
                         
                     content_buffer += content
                     
-                    # 只在内容增加时才进行检查，避免重复检查相同的内容
-                    if len(content_buffer) >= 10 and len(content_buffer) > last_check_length:
+                    # 只在启用断句发送且内容增加时才进行检查
+                    if self.stream_split_sentence and len(content_buffer) >= 10 and len(content_buffer) > last_check_length:
                         last_check_length = len(content_buffer)
                         
-                        # 查找所有可能的终止符位置
-                        punctuation_positions = []
-                        i = 0
-                        while i < len(content_buffer):
-                            # 检查连续的标点符号
-                            if content_buffer[i] in ['。', '！', '？', '!', '?', '…']:
-                                start_pos = i
-                                # 向后查找连续的相同或相似标点
-                                while i + 1 < len(content_buffer) and content_buffer[i+1] in ['。', '！', '？', '!', '?', '…']:
-                                    i += 1
-                                punctuation_positions.append((start_pos, i))
-                            elif content_buffer[i] == '.':
-                                # 特殊处理句点，只有前面紧跟两个英文单词时才切分
-                                if i >= 2:
-                                    # 向前查找两个单词
-                                    text_before = content_buffer[:i]
-                                    words = text_before.strip().split()
-                                    if len(words) >= 2 and words[-1].isalpha() and words[-2].isalpha():
-                                        start_pos = i
-                                        # 向后查找连续的句点
-                                        while i + 1 < len(content_buffer) and content_buffer[i+1] == '.':
-                                            i += 1
-                                        punctuation_positions.append((start_pos, i))
-                            i += 1
-
-                        # 如果找到终止符
-                        if punctuation_positions:
-                            last_pos = punctuation_positions[-1][1]
-                            
-                            # 处理代码块
-                            next_backtick = content_buffer.find('`', 0, last_pos)
-                            if next_backtick != -1:
-                                pair_backtick = content_buffer.find('`', next_backtick + 1)
-                                if pair_backtick != -1 and pair_backtick > last_pos:
-                                    continue  # 等待代码块结束
-
-                            # 发送消息并更新缓存
-                            to_send = content_buffer[:last_pos + 1].strip()
+                        found, pos, in_code = self._find_split_position(content_buffer)
+                        if found and not in_code:
+                            to_send = content_buffer[:pos].strip()
                             if to_send:  # 确保不发送空消息
-                                await self.message_queue.put((bot, from_wxid, to_send))
-                                content_buffer = content_buffer[last_pos + 1:]
-                                last_check_length = 0  # 重置检查长度
+                                to_send = self._remove_special_punctuation(to_send)
+                                if to_send:  # 再次确保不发送空消息
+                                    await self.message_queue.put((bot, from_wxid, to_send))
+                            content_buffer = content_buffer[pos:].strip()
+                            last_check_length = 0  # 重置检查长度
                     
                     await asyncio.sleep(0)
 
             # 发送剩余内容
             if content_buffer.strip():
-                await self.message_queue.put((bot, from_wxid, content_buffer.strip()))
+                remaining = self._remove_special_punctuation(content_buffer)
+                if remaining:
+                    await self.message_queue.put((bot, from_wxid, remaining))
 
         except Exception as e:
             logger.error(f"处理流式响应时发生异常: {str(e)}")

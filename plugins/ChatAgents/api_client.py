@@ -21,7 +21,7 @@ class ChatRequest:
     agent_type: str = "base"
     character_tag: str = "ljs"
     quick_query: str = None
-    cite_msg_id: Optional[str] = None
+    quote_msg_id: Optional[str] = None
     model: Optional[str] = None
     max_tokens: Optional[int] = None
     temperature: Optional[float] = None
@@ -62,9 +62,13 @@ class APIClient:
             if response.status_code != 200:
                 raise APIClientException(f"API请求失败: {response.status_code} - {response.text}")
             
-            if payload.get('stream', False):
+            # 检查响应的内容类型
+            content_type = response.headers.get('content-type', '').lower()
+            if 'application/x-ndjson' in content_type:
                 return self._handle_stream_response(response)
-            return response.json()
+            
+            res_json = response.json()
+            return res_json
             
         except Exception as e:
             self._handle_error(e, f"请求 {endpoint}")
@@ -115,7 +119,7 @@ class APIClient:
             "character_tag": character_tag,
             "agent_type": kwargs.get("agent_type", "base"),
             "stream": stream,
-            "cite_msg_id": kwargs.get("cite_msg_id"),
+            "quote_msg_id": kwargs.get("quote_msg_id"),
             "model": kwargs.get("model"),
             "max_tokens": kwargs.get("max_tokens"),
             "temperature": kwargs.get("temperature")
@@ -147,7 +151,7 @@ class APIClient:
             "uid": kwargs.get("uid", "test_user"),
             "character_tag": character_tag,
             "agent_type": kwargs.get("agent_type", "base"),
-            "cite_msg_id": kwargs.get("cite_msg_id"),
+            "quote_msg_id": kwargs.get("quote_msg_id"),
             "model": kwargs.get("model"),
             "max_tokens": kwargs.get("max_tokens"),
             "temperature": kwargs.get("temperature"),
@@ -262,7 +266,7 @@ class APIClient:
             "character_tag": character_tag,
             "agent_type": kwargs.get("agent_type", "base"),
             "role": role,
-            "cite_msg_id": kwargs.get("cite_msg_id")
+            "quote_msg_id": kwargs.get("quote_msg_id")
         }
         
         return self._make_request("chat/append_msg2hist", payload)
@@ -347,7 +351,7 @@ class APIClient:
             "character_tag": character_tag,
             "agent_type": kwargs.get("agent_type", "base"),
             "stream": stream,
-            "cite_msg_id": kwargs.get("cite_msg_id"),
+            "quote_msg_id": kwargs.get("quote_msg_id"),
             "model": kwargs.get("model"),
             "max_tokens": kwargs.get("max_tokens"),
             "temperature": kwargs.get("temperature")
@@ -376,7 +380,7 @@ class APIClient:
             "character_tag": character_tag,
             "agent_type": kwargs.get("agent_type", "base"),
             "stream": stream,
-            "cite_msg_id": kwargs.get("cite_msg_id"),
+            "quote_msg_id": kwargs.get("quote_msg_id"),
             "model": kwargs.get("model"),
             "max_tokens": kwargs.get("max_tokens"),
             "temperature": kwargs.get("temperature"),
@@ -390,3 +394,33 @@ class APIClient:
         request = ChatRequest(**request_params)
         
         return self._make_request("chat/uni_chat", request.to_dict())
+
+    def download_media(self,
+                      chat_id: str,
+                      quote_msg_id: str,
+                      character_tag: str = None,
+                      agent_type: str = "base") -> Dict[str, Any]:
+        """下载媒体消息
+        
+        Args:
+            chat_id (str): 聊天ID
+            quote_msg_id (str): 引用的消息ID
+            character_tag (str, optional): 角色标签. 默认为 None
+            agent_type (str, optional): 代理类型. 默认为 "base"
+            
+        Returns:
+            Dict[str, Any]: 包含下载媒体内容的响应
+        """
+        payload = {
+            "chat_id": chat_id,
+            "quote_msg_id": quote_msg_id,
+            "character_tag": character_tag,
+            "agent_type": agent_type,
+            "uid": self.uid,
+            "stream": True
+        }
+        
+        # 移除None值
+        payload = {k: v for k, v in payload.items() if v is not None}
+        
+        return self._make_request("chat/download_media", payload)

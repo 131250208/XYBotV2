@@ -7,3 +7,6 @@ enable_voice = false  # 是否启用语音回复
 auto_send_interval = 5  # 基础发送间隔（秒）
 active_interval = 180  # 活跃间隔（秒）
 max_voice_length = 28
+stream_split_sentence = true  # 是否在流式输出中断句发送
+special_punctuation = ["<|>"]  # 特殊的断句符，使用不常见的符号组合
+only_split_on_special = true  # 是否只在特殊断句符处断句，true则忽略普通标点符号
