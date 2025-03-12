@@ -21,6 +21,9 @@ import time
 import xml.etree.ElementTree as ET
 import copy
 from .media.online_img_url import excel_logo_url
+import threading
+from queue import Queue as ThreadQueue
+from concurrent.futures import ThreadPoolExecutor
 
 class CharacterAgents(PluginBase):
     """角色代理插件
@@ -52,28 +55,32 @@ class CharacterAgents(PluginBase):
         self.character_tag = config["character_tag"]
         self.uid = config["uid"]
         self.base_url = config["base_url"]
-        self.auto_send_interval = config.get("auto_send_interval", 7)  # 消息发送间隔(秒)
+        self.auto_send_interval = config.get("auto_send_interval", 3)  # 消息发送间隔(秒)
         self.active_interval = config.get("active_interval", 300)  # 活跃间隔(秒)
         self.max_voice_length = config.get("max_voice_length", 28)  # 最大语音长度
         self.enable_voice = config.get("enable_voice", False)  # 是否启用语音功能
         self.whitelist = config.get("whitelist", [])  # 白名单
         self.chat_rooms = [id for id in self.whitelist if "@chatroom" in id]  # 聊天室列表
         self.stream_split_sentence = config.get("stream_split_sentence", True)  # 是否在流式输出中断句发送
-        self.special_punctuation = config.get("special_punctuation", ["<|>"])  # 特殊的断句符
-        self.only_split_on_special = config.get("only_split_on_special", False)  # 是否只在特殊断句符处断句
         
-        # 编译正则表达式
-        special_pattern = '|'.join(map(re.escape, self.special_punctuation))
-        normal_pattern = r'[。！？!?…]+|(?<=\w\s\w)\.'
-        self.split_pattern = re.compile(f'({special_pattern}{"" if self.only_split_on_special else f"|{normal_pattern}"})')
+        # 编译断句正则表达式
+        self.split_pattern = re.compile(r'(?<!\.)\s+\w+[.。！？!?…]+(?![.。！？!?…])|(?<![:：])\n\n')
         
-        # 初始化API客户端
-        self.api_client = APIClient(config["base_url"], self.uid)
-        
+        # 配对符号映射
+        self.paired_symbols = {
+            "'": "'",
+            '"': '"',
+            "“": "”",
+            "‘": "’"
+        }
+
         self.uid = config["uid"]
         self.character_tag = config["character_tag"]
         self.agent_type = config["agent_type"]
 
+        # 初始化API客户端
+        self.api_client = APIClient(config["base_url"], self.uid, self.character_tag, self.agent_type)
+        
         # 获取角色名字
         try:
             response = self.api_client.get_agent_names(
@@ -94,47 +101,81 @@ class CharacterAgents(PluginBase):
         self.last_group_chat_time = {}  # 群聊最后交互时间记录
         self.db = XYBotDB()
 
-        # 初始化消息队列和发送任务
-        self.message_queue = Queue()  # 消息发送队列
-        create_task(self._message_sender())  # 启动消息发送处理器
+        # 初始化线程安全的消息队列
+        self.message_queue = ThreadQueue()
+        
+        # 创建事件循环对象供消息发送线程使用
+        self.sender_loop = asyncio.new_event_loop()
+        
+        # 创建线程池
+        self.thread_pool = ThreadPoolExecutor(max_workers=2)
+        
+        # 启动消息发送线程
+        self.sender_thread = threading.Thread(target=self._run_sender_thread, daemon=True)
+        self.sender_thread.start()
+        logger.info("消息发送线程已启动")
+
+    def _run_sender_thread(self):
+        """运行消息发送线程"""
+        # 设置线程的事件循环
+        asyncio.set_event_loop(self.sender_loop)
+        
+        # 在新线程中运行事件循环
+        self.sender_loop.run_until_complete(self._message_sender())
 
     ###################
     # 消息处理器部分 #
     ###################
 
-    def _find_split_position(self, text: str, end_pos: int = None) -> tuple:
-        """查找文本中的断句位置
+    def _check_chunk_end_for_split(self, text: str, max_look_back: int = 50) -> tuple:
+        """检查文本末尾是否存在断句位置
+        
+        智能检测断句位置，处理特殊区域（引号内、代码块内）和英文句号
         
         Args:
             text (str): 要检查的文本
-            end_pos (int, optional): 结束位置。默认为None，表示检查整个文本
+            max_look_back (int): 最大向前检查的字符数
             
         Returns:
-            tuple: (是否找到断句位置, 断句位置, 是否在代码块中)
+            tuple: (是否找到断句位置, 断句位置索引, 是否在特殊区域中)
         """
-        if end_pos is None:
-            end_pos = len(text)
+        if not text:
+            return False, -1, False
             
-        # 检查是否在代码块中
-        next_backtick = text.find('`', 0, end_pos)
-        if next_backtick != -1:
-            pair_backtick = text.find('`', next_backtick + 1, end_pos)
-            if pair_backtick != -1:
+        # 只检查文本末尾部分
+        check_start = max(0, len(text) - max_look_back)
+        tail_text = text[check_start:]
+        
+        # 检查是否在代码块内
+        code_blocks = tail_text.count('```')
+        if code_blocks % 2 != 0:
+            extended_text = text[max(0, check_start - 100):] 
+            if extended_text.count('```') % 2 != 0:
                 return False, -1, True
         
-        # 查找最后一个断句符
-        match = None
-        for m in self.split_pattern.finditer(text[:end_pos]):
-            match = m
+        # 检查引号配对状态
+        stack = []
+        for i, char in enumerate(tail_text):
+            if char in self.paired_symbols or char in self.paired_symbols.values():
+                if not stack or (char != self.paired_symbols.get(stack[-1])):
+                    stack.append(char)
+                else:
+                    stack.pop()
+        
+        if stack:  # 如果栈不为空，说明在引号内
+            return False, -1, True
             
-        if match:
-            return True, match.end(), False
-            
+        # 查找最后一个有效的断句位置
+        matches = list(self.split_pattern.finditer(tail_text))
+        if matches:
+            match = matches[-1]
+            global_pos = check_start + match.end()
+            # 验证不是连续的标点
+            next_char = text[global_pos:global_pos + 1]
+            if not next_char or next_char not in '.。！？!?…':
+                return True, global_pos, False
+                
         return False, -1, False
-
-    def _remove_special_punctuation(self, text: str) -> str:
-        """移除文本中的特殊断句符"""
-        return self.split_pattern.sub('', text).strip()
 
     async def _split_content_by_punctuation(self, content: str) -> list:
         """根据标点符号切分内容"""
@@ -145,23 +186,20 @@ class CharacterAgents(PluginBase):
         while len(content_buffer) >= 10 and len(content_buffer) > last_check_length:
             last_check_length = len(content_buffer)
             
-            found, pos, in_code = self._find_split_position(content_buffer)
+            found, pos, in_code = self._check_chunk_end_for_split(content_buffer)
             if found and not in_code:
                 to_send = content_buffer[:pos].strip()
                 if to_send:  # 确保不发送空消息
-                    to_send = self._remove_special_punctuation(to_send)
-                    if to_send:  # 再次确保不发送空消息
-                        result.append(to_send)
+                    result.append(to_send)
                 content_buffer = content_buffer[pos:].strip()
                 last_check_length = 0  # 重置检查长度
             elif in_code:
                 break
 
         # 处理剩余内容
-        if content_buffer.strip():
-            remaining = self._remove_special_punctuation(content_buffer)
-            if remaining:
-                result.append(remaining)
+        remaining = content_buffer.strip()
+        if remaining:
+            result.append(remaining)
             
         return result
 
@@ -204,8 +242,9 @@ class CharacterAgents(PluginBase):
             
         # 判断是否为流式返回
         if isinstance(reply, Generator):
-            # 创建新任务处理流式响应
-            create_task(self._handle_stream_response(bot, from_wxid, reply))
+            # 在线程池中处理流式响应
+            self.thread_pool.submit(self._run_stream_handler, bot, from_wxid, reply)
+            logger.info("已在新线程中启动流式响应处理")
         else:
             try:
                 # 处理非流式返回
@@ -215,7 +254,7 @@ class CharacterAgents(PluginBase):
                         # 使用相同的切分逻辑处理内容
                         content_parts = await self._split_content_by_punctuation(content)
                         for part in content_parts:
-                            await self.message_queue.put((bot, from_wxid, part))
+                            self.message_queue.put((bot, from_wxid, part))
                     else:
                         logger.error("API返回内容格式不正确")
                         await bot.send_text_message(from_wxid, "抱歉,系统出现错误")
@@ -228,6 +267,101 @@ class CharacterAgents(PluginBase):
                 await bot.send_text_message(from_wxid, "抱歉,系统出现错误")
         
         return False
+
+    def _run_stream_handler(self, bot: WechatAPIClient, from_wxid: str, reply):
+        """在新线程中运行流式处理
+        
+        Args:
+            bot (WechatAPIClient): 微信API客户端
+            from_wxid (str): 发送者ID
+            reply (Generator): 流式响应生成器
+        """
+        try:
+            # 直接调用同步处理方法
+            self._handle_stream_response(bot, from_wxid, reply)
+        except Exception as e:
+            logger.error(f"流式处理线程发生异常: {str(e)}")
+            logger.error(traceback.format_exc())
+            # 将错误消息放入队列
+            self.message_queue.put((bot, from_wxid, "抱歉,系统出现错误"))
+
+    def _handle_stream_response(self, bot: WechatAPIClient, from_wxid: str, reply):
+        """处理流式响应
+        
+        同步处理AI的流式输出，不涉及任何异步操作
+        """
+        try:
+            if not reply:
+                logger.error("API 返回内容为空")
+                self.message_queue.put((bot, from_wxid, "抱歉,系统出现错误"))
+                return
+
+            content_buffer = ""  # 正式回答的缓存
+            reasoning_buffer = []  # 推理过程的缓存
+            reasoning_finished = False  # 推理阶段标记
+
+            for chunk in reply:  # 同步迭代处理
+                if not isinstance(chunk, dict):
+                    raise ValueError("流式响应内容不是字典类型, 而是: {}, \n{}".format(type(chunk), chunk))
+                
+                # 处理推理内容
+                if chunk["choices"][0]["delta"].get("reasoning_content"):
+                    content = chunk["choices"][0]["delta"]["reasoning_content"]
+                    reasoning_buffer.append(content)
+                    print(content, end="", flush=True)
+
+                # 处理正式回答
+                if chunk["choices"][0]["delta"].get("content"):
+                    if not reasoning_finished:
+                        reasoning_finished = True
+                        reason_content = ''.join(reasoning_buffer)
+                        if reason_content:
+                            logger.info(f"完整推理过程:\n{reason_content}")
+                        print("\n正式回答：")
+                        reasoning_buffer = []
+
+                    content = chunk["choices"][0]["delta"]["content"]
+                    
+                    # 如果content是字典类型，直接放入队列
+                    if isinstance(content, dict):
+                        self.message_queue.put((bot, from_wxid, content))
+                        continue
+
+                    if chunk.get("chunk_type") != "big_chunk":
+                        print(content, end="", flush=True)                        
+                    
+                    # 将新chunk添加到缓冲区
+                    if chunk.get("chunk_type") != "connect":
+                        # print(content, end="", flush=True)
+                        prev_length = len(content_buffer)
+                        content_buffer += content
+
+                    # 高效断句检测 - 只检查最新添加内容附近的断句可能性
+                    if self.stream_split_sentence and len(content_buffer) >= 10:
+                        # 记录检测开始时间（用于性能监控）
+                        detect_start = time.time()
+                        
+                        # 使用末端检测函数
+                        found, pos, in_special = self._check_chunk_end_for_split(content_buffer)
+                        
+                        # 记录检测耗时
+                        detect_duration = time.time() - detect_start
+                        
+                        if found and not in_special:
+                            to_send = content_buffer[:pos].strip()
+                            if to_send:
+                                self.message_queue.put((bot, from_wxid, to_send))
+                                # 更新缓冲区，保留未发送部分
+                                content_buffer = content_buffer[pos:].strip()
+
+            # 发送剩余内容
+            if content_buffer.strip():
+                self.message_queue.put((bot, from_wxid, content_buffer))
+
+        except Exception as e:
+            logger.error(f"处理流式响应时发生异常: {str(e)}")
+            logger.error(traceback.format_exc())
+            self.message_queue.put((bot, from_wxid, "抱歉,系统出现错误"))
 
     @on_text_message(priority=20)
     async def handle_text(self, bot: WechatAPIClient, message: dict):
@@ -350,7 +484,7 @@ class CharacterAgents(PluginBase):
                         return False
                     else:
                         await bot.send_text_message(from_wxid, "未知命令")
-                return False
+                        return False
             try:
                 return await self._process_message(bot, message)
             except Exception as e:
@@ -522,8 +656,20 @@ class CharacterAgents(PluginBase):
     @on_file_message(priority=20)
     async def handle_file(self, bot: WechatAPIClient, message: dict):
         """处理文件消息"""
-        if not self.enable or message["IsGroup"]:
+        if not self.enable:
             return
+
+        file_name = message["Filename"]
+        file_ext = message["FileExtend"]
+        file_base64 = message["File"]
+        sender_nickname = await bot.get_nickname(message["SenderWxid"])
+        self.api_client.append_msg2hist(
+            chat_id=message["FromWxid"],
+            msg_id=message["NewMsgId"],
+            msg_content=f"[文件加载中...] 文件名：【{file_name}】, base64: {file_base64}",
+            nick_name=sender_nickname,
+            role="user"
+        )
         return False
 
     @on_link_message(priority=20)
@@ -556,97 +702,29 @@ class CharacterAgents(PluginBase):
         return False
 
     ###################
-    # 流式响应处理部分 #
-    ###################
-
-    async def _handle_stream_response(self, bot: WechatAPIClient, from_wxid: str, reply):
-        """处理流式响应
-        
-        处理AI的流式输出，包括推理过程和正式回答。
-        使用异步迭代和消息队列实现非阻塞的消息处理。
-        """
-        try:
-            if not reply:
-                logger.error("API 返回内容为空")
-                await bot.send_text_message(from_wxid, "抱歉,系统出现错误")
-                return
-
-            content_buffer = ""  # 正式回答的缓存
-            reasoning_buffer = []  # 推理过程的缓存
-            reasoning_finished = False  # 推理阶段标记
-            last_check_length = 0  # 上次检查的长度
-
-            async for chunk in self._async_iter(reply):
-                # 处理推理内容
-                if chunk["choices"][0]["delta"].get("reasoning_content"):
-                    content = chunk["choices"][0]["delta"]["reasoning_content"]
-                    reasoning_buffer.append(content)
-                    print(content, end="", flush=True)
-                    await asyncio.sleep(0)
-
-                # 处理正式回答
-                if chunk["choices"][0]["delta"].get("content"):
-                    if not reasoning_finished:
-                        reasoning_finished = True
-                        logger.info(f"完整推理过程:\n{''.join(reasoning_buffer)}")
-                        print("\n正式回答：")
-                        reasoning_buffer = []
-
-                    content = chunk["choices"][0]["delta"]["content"]
-                    print(content, end="", flush=True)
-                    
-                    # 如果content是字典类型，直接放入队列
-                    if isinstance(content, dict):
-                        await self.message_queue.put((bot, from_wxid, content))
-                        continue
-                        
-                    content_buffer += content
-                    
-                    # 只在启用断句发送且内容增加时才进行检查
-                    if self.stream_split_sentence and len(content_buffer) >= 10 and len(content_buffer) > last_check_length:
-                        last_check_length = len(content_buffer)
-                        
-                        found, pos, in_code = self._find_split_position(content_buffer)
-                        if found and not in_code:
-                            to_send = content_buffer[:pos].strip()
-                            if to_send:  # 确保不发送空消息
-                                to_send = self._remove_special_punctuation(to_send)
-                                if to_send:  # 再次确保不发送空消息
-                                    await self.message_queue.put((bot, from_wxid, to_send))
-                            content_buffer = content_buffer[pos:].strip()
-                            last_check_length = 0  # 重置检查长度
-                    
-                    await asyncio.sleep(0)
-
-            # 发送剩余内容
-            if content_buffer.strip():
-                remaining = self._remove_special_punctuation(content_buffer)
-                if remaining:
-                    await self.message_queue.put((bot, from_wxid, remaining))
-
-        except Exception as e:
-            logger.error(f"处理流式响应时发生异常: {str(e)}")
-            logger.error(traceback.format_exc())
-            await bot.send_text_message(from_wxid, "抱歉,系统出现错误")
-
-    ###################
     # 消息发送队列部分 #
     ###################
 
     async def _message_sender(self):
         """异步消息发送处理器
         
-        持续监听消息队列，按序发送消息并控制发送间隔。
-        消息格式: (bot, to_wxid, content)
+        在独立线程中运行，处理消息队列中的消息
         """
         while True:
             try:
-                msg = await self.message_queue.get()
+                # 使用阻塞方式获取消息
+                msg = self.message_queue.get()
                 if msg is None:
                     continue
-                
+
+                # 记录队列大小
+                queue_size = self.message_queue.qsize()
+                if queue_size > 0:
+                    logger.info(f"当前消息队列大小: {queue_size}")
+
+                logger.info(f"从队列获取消息，准备发送...")
                 bot, from_wxid, content = msg
-                bot: WechatAPIClient = bot
+                
                 if isinstance(content, dict):
                     logger.info(f"消息内容为字典类型: {content}")
                     if content.get("chunk_type") == "script_finished":
@@ -670,12 +748,16 @@ class CharacterAgents(PluginBase):
                             agent_type=self.agent_type,
                             role="assistant"
                         )
-                    continue # 字典类型处理完毕，跳过后续处理
+                    self.message_queue.task_done()
+                    continue
 
                 # 以下是处理纯文本content
                 content = re.sub(f'\[msg_id.*?{self.main_name}：', '', content)
                 content = content.strip()
 
+                # 记录发送前的时间戳
+                send_start_time = time.time()
+                
                 # 只有在启用语音功能时才考虑发送语音
                 if self.enable_voice:
                     # 根据内容长度计算语音概率
@@ -688,18 +770,19 @@ class CharacterAgents(PluginBase):
                         logger.info(f"向[{from_wxid}] 发送语音消息 (概率:{voice_probability:.2f})")
                         voice_content = gen_voice(content_wo_bracket)
                         if voice_content:
-                            logger.info(f"语音消息内容type: type:{type(voice_content)}")
+                            logger.debug(f"语音消息内容type: type:{type(voice_content)}")
                             remsg_ids = await bot.send_voice_message(from_wxid, voice_content, "mp3")
                         else:
-                            logger.info(f"语音消息内容为空")
+                            logger.debug(f"语音消息内容为空")
                             remsg_ids = await bot.send_text_message(from_wxid, content)
                     else:
-                        logger.info(f"向[{from_wxid}] 发送文本消息")
+                        logger.debug(f"向[{from_wxid}] 发送文本消息")
                         remsg_ids = await bot.send_text_message(from_wxid, content)
                 else:
                     # 语音功能未启用，直接发送文本消息
-                    logger.info(f"向[{from_wxid}] 发送文本消息")
                     remsg_ids = await bot.send_text_message(from_wxid, content)
+                    logger.debug(f"向[{from_wxid}] 发送文本消息")
+
 
                 # 更新聊天历史
                 self.api_client.append_msg2hist(
@@ -712,12 +795,21 @@ class CharacterAgents(PluginBase):
                     role="assistant"
                 )
                 
-                await asyncio.sleep(self.auto_send_interval * (0.8 + random.random() * 0.4))
+                # 根据队列大小动态调整发送间隔
+                if queue_size > 3:
+                    # 队列中消息较多时，减少等待时间
+                    wait_time = self.auto_send_interval * 0.5
+                else:
+                    wait_time = self.auto_send_interval * (0.8 + random.random() * 0.4)
+                
+                await asyncio.sleep(wait_time)
                 self.message_queue.task_done()
                 
             except Exception as e:
                 logger.error(f"消息发送异常: {str(e)}")
                 logger.error(traceback.format_exc())
+                if 'msg' in locals():
+                    self.message_queue.task_done()
 
     ###################
     # 工具函数部分 #
@@ -726,11 +818,26 @@ class CharacterAgents(PluginBase):
     async def _async_iter(self, sync_iter):
         """将同步迭代器转换为异步迭代器
         
-        在每次迭代后让出控制权，避免阻塞事件循环。
+        优化版本：在迭代过程中周期性地让出更多控制权
+        以便消息发送任务有机会执行
         """
+        chunk_count = 0
         for item in sync_iter:
             yield item
-            await asyncio.sleep(0)  # 让出控制权
+            chunk_count += 1
+            
+            # 每处理10个数据块，让出更多时间给消息发送任务
+            if chunk_count % 10 == 0:
+                # 主动清空一次消息队列，确保消息能及时发送
+                await asyncio.sleep(0.1)
+                
+                # 提高消息处理的优先级
+                if not self.message_queue.empty():
+                    # 如果消息队列非空，多让出一些时间
+                    await asyncio.sleep(0.1)
+            else:
+                # 正常让出少量时间
+                await asyncio.sleep(0.01)
 
     def should_respond(self, message: dict, current_time: float) -> bool:
         """判断是否应该响应消息

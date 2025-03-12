@@ -31,8 +31,10 @@ class ChatRequest:
         return {k: v for k, v in asdict(self).items() if v is not None}
 
 class APIClient:
-    def __init__(self, base_url: str, uid: str):
+    def __init__(self, base_url: str, uid: str, character_tag: str, agent_type: str = "base"):
         self.uid = uid
+        self.character_tag = character_tag
+        self.agent_type = agent_type
         self.base_url = base_url
         self._session: Optional[aiohttp.ClientSession] = None
         
@@ -252,21 +254,24 @@ class APIClient:
             return None
 
     def append_msg2hist(self,
+                       chat_id: str,
+                       msg_id: int,
                        msg_content: str,
-                       character_tag: str = None,
                        role: str = "user",
+                       nick_name: str = "test_user",
+                       quote_msg_id: str = None,
                        **kwargs) -> Dict[str, Any]:
         """更新聊天历史"""
         payload = {
-            "chat_id": kwargs.get("chat_id", "test_chat"),
-            "msg_id": kwargs.get("msg_id", 1),
+            "chat_id": chat_id,
+            "msg_id": msg_id,
             "msg_content": msg_content,
-            "nick_name": kwargs.get("nick_name", "test_user"),
-            "uid": kwargs.get("uid", "test_user"),
-            "character_tag": character_tag,
-            "agent_type": kwargs.get("agent_type", "base"),
+            "nick_name": nick_name,
             "role": role,
-            "quote_msg_id": kwargs.get("quote_msg_id")
+            "quote_msg_id": quote_msg_id,
+            "uid":  self.uid,
+            "character_tag": self.character_tag,
+            "agent_type": self.agent_type,
         }
         
         return self._make_request("chat/append_msg2hist", payload)
